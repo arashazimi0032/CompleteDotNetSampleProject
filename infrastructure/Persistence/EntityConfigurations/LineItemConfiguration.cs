@@ -14,5 +14,7 @@ internal class LineItemConfiguration : IEntityTypeConfiguration<LineItem>
         builder.HasOne<Product>()
             .WithMany()
             .HasForeignKey(li => li.ProductId);
+        
+        builder.Property(li => li.Price).HasColumnType("decimal(18, 2)");
     }
 }
