@@ -1,8 +1,9 @@
-﻿namespace Domain.Orders;
+﻿using Domain.Primitive;
 
-public class Order
+namespace Domain.Orders;
+
+public class Order : Entity
 {
-    public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
     public HashSet<LineItem> LineItems { get; set; } = new();
 }

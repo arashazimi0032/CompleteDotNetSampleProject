@@ -1,8 +1,9 @@
-﻿namespace Domain.Customers;
+﻿using Domain.Primitive;
 
-public class Customer
+namespace Domain.Customers;
+
+public class Customer : Entity
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
 }
