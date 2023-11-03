@@ -1,4 +1,5 @@
 using Application;
+using Carter;
 using infrastructure;
 using infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -33,5 +34,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapCarter();
 
 app.Run();
