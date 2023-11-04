@@ -22,7 +22,7 @@ internal sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCusto
             Email = request.Email
         };
 
-        await _unitOfWork .Customer.AddAsync(customer, cancellationToken);
+        await _unitOfWork.Customer.AddAsync(customer, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

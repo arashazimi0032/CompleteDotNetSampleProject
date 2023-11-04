@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using Domain.Primitive;
+using System.Collections.Generic;
 
 namespace infrastructure.Persistence.Repositories;
 
@@ -18,6 +19,11 @@ public class Repository<T> : IRepository<T>
     }
 
     public IQueryable<T> GetQueryable()
+    {
+        return dbSet;
+    }
+
+    public async Task<IQueryable<T>> GetQueryableAsync()
     {
         return dbSet;
     }

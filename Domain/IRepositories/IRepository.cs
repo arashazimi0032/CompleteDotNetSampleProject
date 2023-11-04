@@ -6,6 +6,8 @@ public interface IRepository<T>
     where T : Entity
 {
     IQueryable<T> GetQueryable();
+    
+    Task<IQueryable<T>> GetQueryableAsync();
 
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
