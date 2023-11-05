@@ -1,8 +1,6 @@
 using Application;
 using Carter;
 using infrastructure;
-using infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Presentation;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Customers.Queries.Share;
+using MediatR;
 
 namespace Application.Customers.Queries.Get;
 

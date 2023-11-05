@@ -1,4 +1,5 @@
-﻿using Domain.Customers;
+﻿using Application.Customers.Queries.Share;
+using Domain.Customers;
 using Domain.Exceptions;
 using Domain.IRepositories;
 using MediatR;

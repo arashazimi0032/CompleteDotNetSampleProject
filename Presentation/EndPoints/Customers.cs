@@ -2,6 +2,7 @@
 using Application.Customers.Commands.Delete;
 using Application.Customers.Commands.Update;
 using Application.Customers.Queries.Get;
+using Application.Customers.Queries.GetAll;
 using Carter;
 using Domain.Exceptions;
 using MediatR;
@@ -66,6 +67,15 @@ public class Customers : ICarterModule
             {
                 return Results.NotFound(e.Message);
             }
+        });
+
+        app.MapGet("customers", async (ISender sender) =>
+        {
+            var query = new GetAllCustomersQuery();
+
+            var response = await sender.Send(query);
+
+            return Results.Ok(response);
         });
     }
 }

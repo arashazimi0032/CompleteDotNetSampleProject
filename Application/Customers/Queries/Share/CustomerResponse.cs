@@ -1,3 +1,3 @@
-﻿namespace Application.Customers.Queries.Get;
+﻿namespace Application.Customers.Queries.Share;
 
 public record CustomerResponse(Guid Id, string Name, string Email);
