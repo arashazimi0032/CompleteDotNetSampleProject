@@ -1,4 +1,4 @@
-﻿using Domain.ApplicationUser;
+﻿using Domain.ApplicationUsers;
 using Domain.Customers;
 using Domain.Orders;
 using Domain.Products;

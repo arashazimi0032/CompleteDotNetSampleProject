@@ -1,11 +1,10 @@
 using Application;
 using Carter;
-using Domain.ApplicationUser;
+using Domain.ApplicationUsers;
 using infrastructure;
 using infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Presentation;
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
