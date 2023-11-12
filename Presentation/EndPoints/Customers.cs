@@ -6,6 +6,7 @@ using Application.Customers.Queries.GetAll;
 using Carter;
 using Domain.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.EndPoints;
@@ -14,7 +15,7 @@ public class Customers : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("customers", async (CreateCustomerCommand command, ISender sender) =>
+        app.MapPost("api/customers", async (CreateCustomerCommand command, ISender sender) =>
         {
             await sender.Send(command);
             
@@ -76,6 +77,6 @@ public class Customers : ICarterModule
             var response = await sender.Send(query);
 
             return Results.Ok(response);
-        });
+        }).RequireAuthorization();
     }
 }

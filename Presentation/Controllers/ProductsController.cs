@@ -3,6 +3,7 @@ using Application.Products.Commands.Delete;
 using Application.Products.Commands.Update;
 using Application.Products.Queries.Get;
 using Application.Products.Queries.GetAll;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;

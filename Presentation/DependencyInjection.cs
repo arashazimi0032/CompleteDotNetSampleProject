@@ -10,8 +10,15 @@ public static class DependencyInjection
     {
         service.AddCarter();
 
-        service.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        service.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer();
+
+        service.AddAuthorization();
 
         service.ConfigureOptions<JwtOptionsSetup>();
         service.ConfigureOptions<JwtBearerOptionsSetup>();

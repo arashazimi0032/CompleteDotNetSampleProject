@@ -30,7 +30,7 @@ public static class DependencyInjection
         services.AddScoped<IGetProductService, GetProductService>();
         
         services.AddScoped<IGetAllProductsService, GetAllProductsService>();
-
+        
         return services;
     }
 }

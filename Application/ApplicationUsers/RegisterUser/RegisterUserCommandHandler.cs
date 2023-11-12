@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.ApplicationUsers.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterCommand, UserResponse>
+internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, UserResponse>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +18,7 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterComma
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<UserResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<UserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         if (request is null)
         {

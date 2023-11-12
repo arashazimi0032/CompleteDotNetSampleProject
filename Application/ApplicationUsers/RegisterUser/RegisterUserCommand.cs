@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.ApplicationUsers.RegisterUser
 {
-    public class RegisterCommand : IRequest<UserResponse>
+    public class RegisterUserCommand : IRequest<UserResponse>
     {
         [Required]
         [MaxLength(50)]
