@@ -6,7 +6,6 @@ using Application.Authentication;
 using Domain.ApplicationUsers;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -42,14 +41,14 @@ internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand
         {
             return new UserResponse
             {
-                Message = "Invalid Password!", 
+                Message = "Invalid Password!",
                 IsSuccess = false
             };
         }
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Email, request.Email), 
+            new Claim(ClaimTypes.Email, request.Email),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim("CustomerId", user.CustomerId.ToString() ?? string.Empty)
         };
@@ -68,8 +67,8 @@ internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand
 
         return new UserResponse
         {
-            Message = tokenAsString, 
-            IsSuccess = true, 
+            Message = tokenAsString,
+            IsSuccess = true,
             ExpireDate = token.ValidTo
         };
     }

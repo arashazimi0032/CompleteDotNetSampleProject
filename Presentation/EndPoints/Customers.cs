@@ -15,12 +15,12 @@ public class Customers : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/customers", async (CreateCustomerCommand command, ISender sender) =>
+        app.MapPost("customers", async (CreateCustomerCommand command, ISender sender) =>
         {
             await sender.Send(command);
             
             return Results.Ok();
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("customers/{id:Guid}", async (Guid id, ISender sender) =>
         {
@@ -36,7 +36,7 @@ public class Customers : ICarterModule
             {
                 return Results.NotFound(e.Message);
             }
-        });
+        }).RequireAuthorization();
 
         app.MapPut("customers/{id:Guid}", async (Guid id, [FromBody] UpdateCustomerRequest request, ISender sender) =>
         {
@@ -52,7 +52,7 @@ public class Customers : ICarterModule
             {
                 return Results.NotFound(e.Message);
             }
-        });
+        }).RequireAuthorization();
 
         app.MapGet("customers/{id:Guid}", async (Guid id, ISender sender) =>
         {
@@ -68,7 +68,7 @@ public class Customers : ICarterModule
             {
                 return Results.NotFound(e.Message);
             }
-        });
+        }).RequireAuthorization();
 
         app.MapGet("customers", async (ISender sender) =>
         {
