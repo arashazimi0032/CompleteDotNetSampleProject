@@ -1,10 +1,7 @@
-﻿using Domain.ApplicationUsers;
+﻿using Application.Abstractions.Email;
 using Domain.IRepositories;
-using infrastructure.Persistence;
 using infrastructure.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using infrastructure.Services.Email;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace infrastructure;
@@ -15,6 +12,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IEmailService, EmailService>();
 
         return services;
     }
