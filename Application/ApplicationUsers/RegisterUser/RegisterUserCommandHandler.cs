@@ -1,9 +1,13 @@
-﻿using Application.ApplicationUsers.Share;
+﻿using System.Text;
+using Application.Abstractions.Email;
+using Application.ApplicationUsers.Share;
 using Domain.ApplicationUsers;
 using Domain.Customers;
 using Domain.IRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.ApplicationUsers.RegisterUser;
 
@@ -11,11 +15,15 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
-    public RegisterUserCommandHandler(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
+    public RegisterUserCommandHandler(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IConfiguration configuration, IEmailService emailService)
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _configuration = configuration;
+        _emailService = emailService;
     }
 
     public async Task<UserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -66,6 +74,18 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
+
+        // send confirmation email
+        var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+        var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+        var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+
+        string url = $"{_configuration["AppUrl"]}/api/authentication/confirmemail?userid={applicationUser.Id}&token={validEmailToken}";
+
+        await _emailService.SendEmailAsync(request.Email,
+            "Email Confirmation",
+            $"<h1>Welcome to Complete .Net Sample Project</h1>" + 
+            $"<p>Please confirm your email by <a href='{url}'>Clicking here.</a></p>");
 
         return new UserResponse()
         {

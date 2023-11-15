@@ -1,4 +1,5 @@
-﻿using Application.ApplicationUsers.LoginUser;
+﻿using Application.ApplicationUsers.ConfirmEmail;
+using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -50,5 +51,26 @@ public class AuthenticationController : ControllerBase
         }
 
         return Ok(userResponse);
+    }
+
+    [HttpGet("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail(string userId, string token,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        var confirmEmailCommand = new ConfirmEmailCommand(userId, token);
+
+        var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+
+        return Ok(response);
     }
 }
