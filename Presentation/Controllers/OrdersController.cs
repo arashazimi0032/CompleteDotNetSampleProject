@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Application.Orders.Commands.Create;
 using Application.Orders.Commands.Delete;
+using Application.Orders.Commands.Update;
 using Domain.ApplicationUsers;
 using Domain.IRepositories;
 using MediatR;
@@ -26,7 +27,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]CreateOrderRequest request, 
+        public async Task<IActionResult> CreateOrder([FromBody]CreateOrderRequest request, 
             CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -49,7 +50,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> DeleteOrder(Guid id, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -59,6 +60,21 @@ namespace Presentation.Controllers
             var deleteOrderCommand = new DeleteOrderCommand(id);
 
             await _mediator.Send(deleteOrderCommand, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(Guid id, UpdateOrderRequest request, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Some properties are not valid!");
+            }
+
+            var updateOrderCommand = new UpdateOrderCommand(id, request);
+
+            await _mediator.Send(updateOrderCommand, cancellationToken);
 
             return Ok();
         }
