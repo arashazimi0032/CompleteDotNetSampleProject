@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Application.Orders.Commands.Create;
+using Application.Orders.Commands.Delete;
 using Domain.ApplicationUsers;
 using Domain.IRepositories;
 using MediatR;
@@ -43,6 +44,21 @@ namespace Presentation.Controllers
             var command = new CreateOrderCommand(currentUser.CustomerId, request.ProductId);
 
             await _mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Some properties are not valid!");
+            }
+
+            var deleteOrderCommand = new DeleteOrderCommand(id);
+
+            await _mediator.Send(deleteOrderCommand, cancellationToken);
 
             return Ok();
         }

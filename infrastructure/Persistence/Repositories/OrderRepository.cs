@@ -13,10 +13,10 @@ public sealed class OrderRepository : Repository<Order>, IOrderRepository
         _context = context;
     }
 
-    public async Task<Order?> GetByIdWithLineItemsAsync(Guid id)
+    public async Task<Order?> GetByIdWithLineItemsAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await GetQueryable()
+        return await (await GetQueryableAsync())
             .Include(o => o.LineItems)
-            .FirstOrDefaultAsync(o => o.Id == id);
+            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 }
