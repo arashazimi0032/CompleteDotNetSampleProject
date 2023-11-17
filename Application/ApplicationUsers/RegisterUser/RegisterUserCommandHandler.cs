@@ -80,7 +80,7 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
         var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
         var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-        string url = $"{_configuration["AppUrl"]}/api/authentication/confirmemail?userid={applicationUser.Id}&token={validEmailToken}";
+        var url = $"{_configuration["AppUrl"]}/api/authentication/confirmEmail?userid={applicationUser.Id}&token={validEmailToken}";
 
         await _emailService.SendEmailAsync(request.Email,
             "Email Confirmation",
