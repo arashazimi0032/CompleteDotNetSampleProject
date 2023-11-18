@@ -2,7 +2,10 @@
 using Application.Orders.Commands.Create;
 using Application.Orders.Commands.Delete;
 using Application.Orders.Commands.Update;
+using Application.Orders.Queries.Get;
+using Application.Orders.Queries.GetAll;
 using Domain.ApplicationUsers;
+using Domain.Exceptions;
 using Domain.IRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,18 +38,25 @@ namespace Presentation.Controllers
                 return BadRequest("Some properties are not valid!");
             }
 
-            var currentUser = await _userManager.GetUserAsync(User);
-
-            if (currentUser is null)
+            try
             {
-                return NotFound("Current User Not Found. please login first!");
+                var currentUser = await _userManager.GetUserAsync(User);
+
+                if (currentUser is null)
+                {
+                    return NotFound("Current User Not Found. please login first!");
+                }
+
+                var command = new CreateOrderCommand(currentUser.CustomerId, request.ProductId);
+
+                await _mediator.Send(command, cancellationToken);
+
+                return Ok();
             }
-
-            var command = new CreateOrderCommand(currentUser.CustomerId, request.ProductId);
-
-            await _mediator.Send(command, cancellationToken);
-
-            return Ok();
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -57,11 +67,18 @@ namespace Presentation.Controllers
                 return BadRequest("Some properties are not valid!");
             }
 
-            var deleteOrderCommand = new DeleteOrderCommand(id);
+            try
+            {
+                var deleteOrderCommand = new DeleteOrderCommand(id);
 
-            await _mediator.Send(deleteOrderCommand, cancellationToken);
+                await _mediator.Send(deleteOrderCommand, cancellationToken);
 
-            return Ok();
+                return Ok();
+            }
+            catch (OrderNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -72,11 +89,60 @@ namespace Presentation.Controllers
                 return BadRequest("Some properties are not valid!");
             }
 
-            var updateOrderCommand = new UpdateOrderCommand(id, request);
+            try
+            {
+                var updateOrderCommand = new UpdateOrderCommand(id, request);
 
-            await _mediator.Send(updateOrderCommand, cancellationToken);
+                await _mediator.Send(updateOrderCommand, cancellationToken);
 
-            return Ok();
+                return Ok();
+            }
+            catch (OrderNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrder(Guid id, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Some properties are not valid!");
+            }
+
+            try
+            {
+                var getOrderQuery = new GetOrderQuery(id);
+
+                var response = await _mediator.Send(getOrderQuery, cancellationToken);
+            
+                return Ok(response);
+            }
+            catch (OrderNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrder(CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Some properties are not valid!");
+            }
+
+            try
+            {
+                var getAllOrdersQuery = new GetAllOrdersQuery();
+                var response = await _mediator.Send(getAllOrdersQuery, cancellationToken);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

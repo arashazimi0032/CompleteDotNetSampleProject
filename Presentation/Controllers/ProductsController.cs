@@ -3,6 +3,7 @@ using Application.Products.Commands.Delete;
 using Application.Products.Commands.Update;
 using Application.Products.Queries.Get;
 using Application.Products.Queries.GetAll;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,44 +38,104 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
     {
-        var products = await _getAllProductsService.GetAllProducts(cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        try
+        {
+            var products = await _getAllProductsService.GetAllProducts(cancellationToken);
             
-        return Ok(products);
+            return Ok(products);
+        }
+        catch (ProductNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     // GET api/<ProductsController>/5
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken = default)
     {
-        var product = await _getProductService.GetProduct(id, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
 
-        return Ok(product);
+        try
+        {
+            var product = await _getProductService.GetProduct(id, cancellationToken);
+
+            return Ok(product);
+        }
+        catch (ProductNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     // POST api/<ProductsController>
     [HttpPost]
     public async Task<IActionResult> Post(string name, decimal price, CancellationToken cancellationToken = default)
     {
-        await _createProductService.CreateProduct(name, price, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        try
+        {
+            await _createProductService.CreateProduct(name, price, cancellationToken);
             
-        return Ok();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     // PUT api/<ProductsController>/5
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken = default)
     {
-        await _updateProductService.UpdateProduct(id, request.Name, request.Price, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
 
-        return NoContent();
+        try
+        {
+            await _updateProductService.UpdateProduct(id, request.Name, request.Price, cancellationToken);
+
+            return NoContent();
+        }
+        catch (ProductNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     // DELETE api/<ProductsController>/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
     {
-        await _deleteProductService.DeleteProduct(id, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
 
-        return NoContent();
+        try
+        {
+            await _deleteProductService.DeleteProduct(id, cancellationToken);
+
+            return NoContent();
+        }
+        catch (ProductNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 }

@@ -19,4 +19,11 @@ public sealed class OrderRepository : Repository<Order>, IOrderRepository
             .Include(o => o.LineItems)
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
+
+    public async Task<IEnumerable<Order?>> GetAllWithLineItemsAsync(CancellationToken cancellationToken = default)
+    {
+        return await (await GetQueryableAsync())
+            .Include(o => o.LineItems)
+            .ToListAsync(cancellationToken);
+    }
 }
