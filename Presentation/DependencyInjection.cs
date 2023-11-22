@@ -21,6 +21,7 @@ public static class DependencyInjection
 
         service.ConfigureOptions<JwtOptionsSetup>();
         service.ConfigureOptions<JwtBearerOptionsSetup>();
+        service.ConfigureOptions<EtherealEmailOptionsSetup>();
 
         service.AddAuthorization();
 

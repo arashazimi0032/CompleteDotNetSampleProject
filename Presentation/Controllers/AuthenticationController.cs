@@ -1,6 +1,8 @@
 ﻿using Application.ApplicationUsers.ConfirmEmail;
+using Application.ApplicationUsers.ForgetPassword;
 using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
+using Application.ApplicationUsers.ResetPassword;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,6 +73,72 @@ public class AuthenticationController : ControllerBase
             return BadRequest(response);
         }
 
+        return Ok(response);
+    }
+
+    [HttpPost("ForgetPassword")]
+    public async Task<IActionResult> ForgetPassword(string email, CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        if (string.IsNullOrEmpty(email))
+        {
+            return NotFound("No Email entered!");
+        }
+
+        var command = new ForgetPasswordCommand
+        {
+            Email = email
+        };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+
+        return Ok(response);
+    }
+
+    [HttpGet("ResetPasswordRequest")]
+    public async Task<IActionResult> ResetPasswordRequest(
+        string email,
+        string token)
+    {
+        return Ok(new { email, token });
+    }
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword(
+        string email, 
+        string token, 
+        [FromBody]ResetPasswordRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        var command = new ResetPasswordCommand
+        {
+            ConfirmPassword = request.ConfirmPassword,
+            Password = request.Password,
+            Email = email,
+            Token = token
+        };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+        
         return Ok(response);
     }
 }

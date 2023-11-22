@@ -3,17 +3,17 @@ using Microsoft.Extensions.Options;
 
 namespace Presentation.OptionsSetup;
 
-public class JwtOptionsSetup : IConfigureOptions<JwtOptions>
+public class EtherealEmailOptionsSetup : IConfigureOptions<EtherealEmailOptions>
 {
-    private const string SectionName = "Jwt";
+    public const string SectionName = "Ethereal";
     private readonly IConfiguration _configuration;
 
-    public JwtOptionsSetup(IConfiguration configuration)
+    public EtherealEmailOptionsSetup(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public void Configure(JwtOptions options)
+    public void Configure(EtherealEmailOptions options)
     {
         _configuration.GetSection(SectionName).Bind(options);
     }

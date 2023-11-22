@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Application.ApplicationUsers.Share;
-using Application.Authentication;
+using Application.ConfigOptions;
 using Domain.ApplicationUsers;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

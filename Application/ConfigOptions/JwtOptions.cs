@@ -1,4 +1,4 @@
-﻿namespace Application.Authentication;
+﻿namespace Application.ConfigOptions;
 
 public class JwtOptions
 {
