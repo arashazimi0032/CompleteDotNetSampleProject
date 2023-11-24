@@ -13,7 +13,8 @@ internal class LineItemConfiguration : IEntityTypeConfiguration<LineItem>
 
         builder.HasOne<Product>()
             .WithMany()
-            .HasForeignKey(li => li.ProductId);
+            .HasForeignKey(li => li.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(li => li.Price).HasColumnType("decimal(18, 2)");
     }

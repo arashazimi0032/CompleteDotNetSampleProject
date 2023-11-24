@@ -1,4 +1,6 @@
-﻿namespace Domain.IRepositories;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Domain.IRepositories;
 
 public interface IUnitOfWork
 {
@@ -11,4 +13,6 @@ public interface IUnitOfWork
     ILineItemRepository LineItem { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    DbContext GetDbContext();
 }

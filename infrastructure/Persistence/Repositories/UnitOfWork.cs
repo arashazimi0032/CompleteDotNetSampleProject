@@ -1,4 +1,5 @@
 ﻿using Domain.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Persistence.Repositories;
 
@@ -21,5 +22,10 @@ public sealed class UnitOfWork : IUnitOfWork
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public DbContext GetDbContext()
+    {
+        return _context;
     }
 }

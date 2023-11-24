@@ -13,6 +13,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.HasOne<Customer>()
             .WithOne()
-            .HasForeignKey<ApplicationUser>(au => au.CustomerId);
+            .HasForeignKey<ApplicationUser>(au => au.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.ApplicationUsers.ConfirmEmail;
+using Application.ApplicationUsers.DeleteUser;
 using Application.ApplicationUsers.ForgetPassword;
 using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
@@ -140,5 +141,24 @@ public class AuthenticationController : ControllerBase
         }
         
         return Ok(response);
+    }
+
+    [HttpDelete("DeleteUser/{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+
+        var command = new DeleteUserCommand(id);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 }
