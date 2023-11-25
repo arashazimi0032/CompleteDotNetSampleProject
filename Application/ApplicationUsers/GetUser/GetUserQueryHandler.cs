@@ -30,7 +30,7 @@ internal sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserQu
             Message = "One User found successfully.",
             Users = new List<UserDto>()
             {
-                new UserDto(user.UserName, user.Email)
+                new(user.UserName, user.Email)
             }
         };
     }
