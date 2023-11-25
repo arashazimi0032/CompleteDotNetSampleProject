@@ -1,9 +1,11 @@
 ﻿using Application.ApplicationUsers.ConfirmEmail;
 using Application.ApplicationUsers.DeleteUser;
 using Application.ApplicationUsers.ForgetPassword;
+using Application.ApplicationUsers.GetUser;
 using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
 using Application.ApplicationUsers.ResetPassword;
+using Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,14 +30,21 @@ public class AuthenticationController : ControllerBase
             return BadRequest("Some properties are not valid!"); // status code 400
         }
 
-        var response = await _mediator.Send(userCommand, cancellationToken);
-
-        if (!response.IsSuccess)
+        try
         {
-            return BadRequest(response);
-        }
+            var response = await _mediator.Send(userCommand, cancellationToken);
 
-        return Ok(response);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost("Login")]
@@ -46,14 +55,21 @@ public class AuthenticationController : ControllerBase
             return BadRequest("Some properties are not valid!");
         }
 
-        var userResponse = await _mediator.Send(command, cancellationToken);
-
-        if (!userResponse.IsSuccess)
+        try
         {
-            return BadRequest(userResponse);
-        }
+            var userResponse = await _mediator.Send(command, cancellationToken);
 
-        return Ok(userResponse);
+            if (!userResponse.IsSuccess)
+            {
+                return BadRequest(userResponse);
+            }
+
+            return Ok(userResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("ConfirmEmail")]
@@ -65,16 +81,23 @@ public class AuthenticationController : ControllerBase
             return BadRequest("Some properties are not valid!");
         }
 
-        var confirmEmailCommand = new ConfirmEmailCommand(userId, token);
-
-        var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
-
-        if (!response.IsSuccess)
+        try
         {
-            return BadRequest(response);
-        }
+            var confirmEmailCommand = new ConfirmEmailCommand(userId, token);
 
-        return Ok(response);
+            var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
+
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost("ForgetPassword")]
@@ -85,24 +108,31 @@ public class AuthenticationController : ControllerBase
             return BadRequest("Some properties are not valid!");
         }
 
-        if (string.IsNullOrEmpty(email))
+        try
         {
-            return NotFound("No Email entered!");
+            if (string.IsNullOrEmpty(email))
+            {
+                return NotFound("No Email entered!");
+            }
+
+            var command = new ForgetPasswordCommand
+            {
+                Email = email
+            };
+
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
-
-        var command = new ForgetPasswordCommand
+        catch (Exception e)
         {
-            Email = email
-        };
-
-        var response = await _mediator.Send(command, cancellationToken);
-
-        if (!response.IsSuccess)
-        {
-            return BadRequest(response);
+            return BadRequest(e.Message);
         }
-
-        return Ok(response);
     }
 
     [HttpGet("ResetPasswordRequest")]
@@ -125,22 +155,29 @@ public class AuthenticationController : ControllerBase
             return BadRequest("Some properties are not valid!");
         }
 
-        var command = new ResetPasswordCommand
+        try
         {
-            ConfirmPassword = request.ConfirmPassword,
-            Password = request.Password,
-            Email = email,
-            Token = token
-        };
+            var command = new ResetPasswordCommand
+            {
+                ConfirmPassword = request.ConfirmPassword,
+                Password = request.Password,
+                Email = email,
+                Token = token
+            };
 
-        var response = await _mediator.Send(command, cancellationToken);
+            var response = await _mediator.Send(command, cancellationToken);
 
-        if (!response.IsSuccess)
-        {
-            return BadRequest(response);
-        }
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+            }
         
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpDelete("DeleteUser/{id}")]
@@ -150,15 +187,47 @@ public class AuthenticationController : ControllerBase
         {
             return BadRequest("Some properties are not valid!");
         }
-
-        var command = new DeleteUserCommand(id);
-        var result = await _mediator.Send(command, cancellationToken);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var command = new DeleteUserCommand(id);
+            var result = await _mediator.Send(command, cancellationToken);
 
-        return Ok(result);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpGet("GetUser/{id}")]
+    public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+        try
+        {
+            var query = new GetUserQuery(id);
+
+            var response = await _mediator.Send(query, cancellationToken);
+
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        catch (UserNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 }
