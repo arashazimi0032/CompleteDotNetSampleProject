@@ -11,4 +11,15 @@ public sealed class CustomerRepository : Repository<Customer>, ICustomerReposito
     {
         _context = context;
     }
+
+    public async Task<Customer?> GetCustomerByIdAsync(Guid? id, CancellationToken cancellationToken = default)
+    {
+        if (id is null)
+        {
+            return null;
+        }
+        return await _context.Customers.FindAsync(
+            new object?[] { id, cancellationToken }, 
+            cancellationToken: cancellationToken);
+    }
 }
