@@ -92,7 +92,7 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
                 }
 
                 IdentityResult addRoleResponse;
-                if (!await _roleManager.RoleExistsAsync(request.Role))
+                if (string.IsNullOrWhiteSpace(request.Role) || !await _roleManager.RoleExistsAsync(request.Role))
                 {
                     addRoleResponse = await _userManager.AddToRoleAsync(applicationUser, Role.Customer.ToString());
                 }

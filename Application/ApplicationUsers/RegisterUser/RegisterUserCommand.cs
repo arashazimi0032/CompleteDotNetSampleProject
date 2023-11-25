@@ -27,6 +27,6 @@ namespace Application.ApplicationUsers.RegisterUser
         [MinLength(5)]
         public string ConfirmPassword { get; set; }
 
-        public string Role { get; set; }
+        public string? Role { get; set; }
     }
 }
