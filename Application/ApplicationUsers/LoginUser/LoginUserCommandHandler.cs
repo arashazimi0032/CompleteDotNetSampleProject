@@ -4,6 +4,7 @@ using System.Text;
 using Application.ApplicationUsers.Share;
 using Application.ConfigOptions;
 using Domain.ApplicationUsers;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -50,7 +51,8 @@ internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand
         {
             new Claim(ClaimTypes.Email, request.Email),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim("CustomerId", user.CustomerId.ToString() ?? string.Empty)
+            new Claim("CustomerId", user.CustomerId.ToString() ?? string.Empty),
+            new Claim(ClaimTypes.Role, (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? Role.Customer.ToString())
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));

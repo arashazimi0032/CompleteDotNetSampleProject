@@ -3,8 +3,11 @@ using Application.Products.Commands.Delete;
 using Application.Products.Commands.Update;
 using Application.Products.Queries.Get;
 using Application.Products.Queries.GetAll;
+using Domain.Attributes;
+using Domain.Enums;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -78,6 +81,7 @@ public class ProductsController : ControllerBase
 
     // POST api/<ProductsController>
     [HttpPost]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> Post(string name, decimal price, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
