@@ -58,6 +58,11 @@ internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserComma
             catch (Exception e)
             {
                 await transaction.RollbackAsync(cancellationToken);
+                return new UserResponse
+                {
+                    Message = e.Message,
+                    IsSuccess = false
+                };
             }
         }
 

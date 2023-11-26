@@ -6,6 +6,7 @@ using Application.ApplicationUsers.GetUser;
 using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
 using Application.ApplicationUsers.ResetPassword;
+using Application.ApplicationUsers.UpdateUser;
 using Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -251,6 +252,55 @@ public class AuthenticationController : ControllerBase
             }
 
             return Ok(userQueryResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPut("UpdateUserDetails/{id}")]
+    public async Task<IActionResult> UpdateUserDetails(
+        Guid id, 
+        [FromBody]UpdateUserRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid) return BadRequest("Some properties are not valid!");
+
+        try
+        {
+            var command = new UpdateUserCommand(id, request);
+
+            var userResponse = await _mediator.Send(command, cancellationToken);
+
+            if (!userResponse.IsSuccess) return BadRequest(userResponse);
+
+            return Ok(userResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPut("UpdateUserRole/{id}")]
+    public async Task<IActionResult> UpdateUserRole(
+        Guid id,
+        [FromBody] UpdateUserRoleRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid) return BadRequest("Some properties are not valid!");
+
+        try
+        {
+            var command = new UpdateUserRoleCommand(id, request);
+
+            var userRoleResponse = await _mediator.Send(command,cancellationToken);
+
+            if (!userRoleResponse.IsSuccess) return BadRequest(userRoleResponse);
+
+            return Ok(userRoleResponse);
+
         }
         catch (Exception e)
         {
