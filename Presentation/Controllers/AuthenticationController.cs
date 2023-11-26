@@ -1,6 +1,7 @@
 ﻿using Application.ApplicationUsers.ConfirmEmail;
 using Application.ApplicationUsers.DeleteUser;
 using Application.ApplicationUsers.ForgetPassword;
+using Application.ApplicationUsers.GetAllUsers;
 using Application.ApplicationUsers.GetUser;
 using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
@@ -228,6 +229,32 @@ public class AuthenticationController : ControllerBase
         catch (UserNotFoundException e)
         {
             return NotFound(e.Message);
+        }
+    }
+
+    [HttpGet("GetAllUsers")]
+    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Some properties are not valid!");
+        }
+        try
+        {
+            var query = new GetAllUsersQuery();
+
+            var userQueryResponse = await _mediator.Send(query, cancellationToken);
+
+            if (!userQueryResponse.IsSuccess)
+            {
+                return BadRequest(userQueryResponse);
+            }
+
+            return Ok(userQueryResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }
