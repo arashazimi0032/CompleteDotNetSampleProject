@@ -22,9 +22,7 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
 
     public async Task<UserResponse> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(command.Id.ToString());
-
-        if (user is null) throw new UserNotFoundException(command.Id);
+        var user = await _userManager.FindByIdAsync(command.Id.ToString()) ?? throw new UserNotFoundException(command.Id);
 
         var customer = await _unitOfWork.Customer.GetCustomerByIdAsync(user.CustomerId, cancellationToken);
 

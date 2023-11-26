@@ -18,11 +18,7 @@ internal sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserQu
 
     public async Task<UserQueryResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.Id.ToString());
-        if (user is null)
-        {
-            throw new UserNotFoundException(request.Id);
-        }
+        var user = await _userManager.FindByIdAsync(request.Id.ToString()) ?? throw new UserNotFoundException(request.Id);
 
         return new UserQueryResponse
         {

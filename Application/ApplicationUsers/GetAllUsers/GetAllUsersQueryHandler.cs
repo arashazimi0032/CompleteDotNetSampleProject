@@ -20,13 +20,7 @@ internal sealed class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery
     {
         var users = await _userManager.Users.ToListAsync(cancellationToken);
 
-        var usersList = new List<UserDto>();
-
-        foreach (var user in users)
-        {
-            var userDto = new UserDto(user.UserName, user.Email);
-            usersList.Add(userDto);
-        }
+        var usersList = users.Select(user => new UserDto(user.UserName, user.Email)).ToList();
 
         return new UserQueryResponse
         {

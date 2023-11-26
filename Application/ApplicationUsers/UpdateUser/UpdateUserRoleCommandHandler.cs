@@ -20,9 +20,7 @@ internal sealed class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserR
 
     public async Task<UserResponse> Handle(UpdateUserRoleCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(command.Id.ToString());
-
-        if (user is null) throw new UserNotFoundException(command.Id);
+        var user = await _userManager.FindByIdAsync(command.Id.ToString()) ?? throw new UserNotFoundException(command.Id);
 
         var currentRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
