@@ -7,6 +7,8 @@ using Application.ApplicationUsers.LoginUser;
 using Application.ApplicationUsers.RegisterUser;
 using Application.ApplicationUsers.ResetPassword;
 using Application.ApplicationUsers.UpdateUser;
+using Domain.Attributes;
+using Domain.Enums;
 using Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -183,6 +185,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpDelete("DeleteUser/{id}")]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -234,6 +237,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpGet("GetAllUsers")]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -284,6 +288,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPut("UpdateUserRole/{id}")]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> UpdateUserRole(
         Guid id,
         [FromBody] UpdateUserRoleRequest request,

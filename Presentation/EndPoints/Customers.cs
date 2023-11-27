@@ -10,7 +10,9 @@ public class Customers : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("customers/{id:Guid}", async (Guid id, ISender sender) =>
+        var customer = app.MapGroup("/api").WithTags("Customer");
+
+        customer.MapGet("customers/{id:Guid}", async (Guid id, ISender sender) =>
         {
             try
             {
@@ -26,13 +28,13 @@ public class Customers : ICarterModule
             }
         }).RequireAuthorization();
 
-        app.MapGet("customers", async (ISender sender) =>
+        customer.MapGet("customers", async (ISender sender) =>
         {
             var query = new GetAllCustomersQuery();
 
             var response = await sender.Send(query);
 
             return Results.Ok(response);
-        }).RequireAuthorization();
+        }).RequireAuthorization("AdminPolicy");
     }
 }

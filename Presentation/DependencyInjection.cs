@@ -1,4 +1,5 @@
 ﻿using Carter;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Presentation.OptionsSetup;
@@ -23,7 +24,9 @@ public static class DependencyInjection
         service.ConfigureOptions<JwtBearerOptionsSetup>();
         service.ConfigureOptions<EtherealEmailOptionsSetup>();
 
-        service.AddAuthorization();
+        service
+            .AddAuthorization()
+            .AddAuthorizationPolicies();
 
         return service;
     }
@@ -61,6 +64,18 @@ public static class DependencyInjection
             };
             c.AddSecurityRequirement(securityRequirement);
         });
+
+        return service;
+    }
+
+    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection service)
+    {
+        service.AddAuthorizationBuilder()
+            .AddPolicy("AdminPolicy", policy =>
+            {
+                policy
+                    .RequireRole(Role.Admin.ToString());
+            });
 
         return service;
     }

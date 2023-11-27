@@ -14,7 +14,6 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly ICreateProductService _createProductService;
@@ -103,6 +102,7 @@ public class ProductsController : ControllerBase
 
     // PUT api/<ProductsController>/5
     [HttpPut("{id}")]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> Put(Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -124,6 +124,7 @@ public class ProductsController : ControllerBase
 
     // DELETE api/<ProductsController>/5
     [HttpDelete("{id}")]
+    [CustomAuthorize(Role.Admin)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
