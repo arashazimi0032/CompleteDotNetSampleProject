@@ -1,3 +1,5 @@
-﻿namespace Application.Products.Commands.Update;
+﻿using Domain.Shared;
 
-public record UpdateProductRequest(string Name, decimal Price);
+namespace Application.Products.Commands.Update;
+
+public record UpdateProductRequest(string Name, Money Price);

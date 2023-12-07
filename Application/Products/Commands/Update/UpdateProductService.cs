@@ -1,5 +1,7 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories;
+using Domain.Products;
+using Domain.Shared;
 
 namespace Application.Products.Commands.Update;
 
@@ -12,7 +14,7 @@ public sealed class UpdateProductService : IUpdateProductService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task UpdateProduct(Guid id, string name, decimal price, CancellationToken cancellationToken = default)
+    public async Task UpdateProduct(Guid id, string name, Money price, CancellationToken cancellationToken = default)
     {
         var product = await _unitOfWork.Product.GetByIdAsync(id, cancellationToken);
 
@@ -21,9 +23,8 @@ public sealed class UpdateProductService : IUpdateProductService
             throw new ProductNotFoundException(id);
         }
 
-        product.Name = name;
-        product.Price = price;
-
+        product.Update(name, price);
+        
         _unitOfWork.Product.Update(product);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

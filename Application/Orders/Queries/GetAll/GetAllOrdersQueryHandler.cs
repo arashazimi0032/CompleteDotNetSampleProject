@@ -1,4 +1,5 @@
 ﻿using Application.Orders.Queries.Share;
+using Domain.Exceptions;
 using Domain.IRepositories;
 using MediatR;
 
@@ -18,7 +19,7 @@ internal sealed class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQue
         var orders = await  _unitOfWork.Order.GetAllWithLineItemsAsync(cancellationToken);
 
         var response = orders
-            .Select(o => new OrderResponse(o.Id, o.CustomerId, o.LineItems))
+            .Select(o => new OrderResponse(o!.Id.Value, o.CustomerId.Value, o.LineItems))
             .ToList();
         return response;
     }

@@ -17,7 +17,7 @@ public sealed class GetAllProductsService : IGetAllProductsService
         var products = await _unitOfWork.Product.GetAllAsync(cancellationToken);
 
         return products
-            .Select(p => new ProductResponse(p.Id, p.Name, p.Price))
+            .Select(p => new ProductResponse(p.Id.Value, p.Name, p.Price))
             .ToList();
     }
 }

@@ -1,3 +1,6 @@
-﻿namespace Application.Orders.Commands.Update;
+﻿using Domain.Orders;
+using Domain.Products;
 
-public record UpdateOrderRequest(List<Guid> LineItemId, List<Guid> ProductId);
+namespace Application.Orders.Commands.Update;
+
+public record UpdateOrderRequest(List<Guid> ProductId);

@@ -24,18 +24,18 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
     {
         var user = await _userManager.FindByIdAsync(command.Id.ToString()) ?? throw new UserNotFoundException(command.Id);
 
-        var customer = await _unitOfWork.Customer.GetCustomerByIdAsync(user.CustomerId, cancellationToken);
+        var customer = await _unitOfWork.Customer.GetByIdAsync(user.CustomerId.Value, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(command.Request.UserName))
         {
             user.UserName = command.Request.UserName;
-            if (customer is not null) customer.Name = command.Request.UserName;
+            customer?.Update(command.Request.UserName, null);
         }
 
         if (!string.IsNullOrWhiteSpace(command.Request.Email))
         {
             user.Email = command.Request.Email;
-            if (customer is not null) customer.Email = command.Request.Email;
+            customer?.Update(null, command.Request.Email);
         }
 
         await using (var transaction = await _unitOfWork.GetDbContext().Database.BeginTransactionAsync(cancellationToken))

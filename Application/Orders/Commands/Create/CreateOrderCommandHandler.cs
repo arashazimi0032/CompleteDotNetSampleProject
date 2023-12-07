@@ -3,6 +3,7 @@ using Domain.Customers;
 using Domain.Exceptions;
 using Domain.IRepositories;
 using Domain.Orders;
+using Domain.Products;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -21,8 +22,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
     public async Task Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var orderId = Guid.NewGuid();
-        var lineItems = new HashSet<LineItem>();
+        var order = Order.Create(new CustomerId(request.CustomerId));
 
         foreach (var productId in request.ProductId)
         {
@@ -33,23 +33,17 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
                 throw new ProductNotFoundException(productId);
             }
 
-            var lineItem = new LineItem
-            {
-                Id = Guid.NewGuid(), 
-                OrderId = orderId, 
-                ProductId = productId, 
-                Price = product.Price,
-            };
-
-            lineItems.Add(lineItem);
+            order.Add(new ProductId(productId), product.Price);
+            
         }
 
-        var order = new Order
-        {
-            Id = orderId,
-            CustomerId = request.CustomerId,
-            LineItems = lineItems
-        };
+
+        //var order = new Order
+        //{
+        //    Id = orderId,
+        //    CustomerId = request.CustomerId,
+        //    LineItems = lineItems
+        //};
 
         await _unitOfWork.Order.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

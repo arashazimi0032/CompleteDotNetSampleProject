@@ -1,3 +1,5 @@
-﻿namespace Application.Products.Queries.Share;
+﻿using Domain.Shared;
 
-public record ProductResponse(Guid Id, string Name, decimal Price);
+namespace Application.Products.Queries.Share;
+
+public record ProductResponse(Guid Id, string Name, Money Price);

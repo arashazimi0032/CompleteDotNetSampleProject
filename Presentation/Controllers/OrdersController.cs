@@ -7,6 +7,7 @@ using Application.Orders.Queries.GetAll;
 using Domain.ApplicationUsers;
 using Domain.Exceptions;
 using Domain.IRepositories;
+using Domain.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,7 @@ namespace Presentation.Controllers
                     return NotFound("Current User Not Found. please login first!");
                 }
 
-                var command = new CreateOrderCommand(currentUser.CustomerId, request.ProductId);
+                var command = new CreateOrderCommand(currentUser.CustomerId!.Value, request.ProductId);
 
                 await _mediator.Send(command, cancellationToken);
 
@@ -82,7 +83,10 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(Guid id, UpdateOrderRequest request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> UpdateOrder(
+            Guid id,
+            UpdateOrderRequest request,
+            CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {

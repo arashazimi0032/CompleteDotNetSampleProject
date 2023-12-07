@@ -1,4 +1,6 @@
-﻿namespace Application.Products.Commands.Delete;
+﻿using Domain.Products;
+
+namespace Application.Products.Commands.Delete;
 
 public interface IDeleteProductService
 {

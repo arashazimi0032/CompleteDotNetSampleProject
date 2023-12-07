@@ -17,7 +17,7 @@ public sealed class OrderRepository : Repository<Order>, IOrderRepository
     {
         return await (await GetQueryableAsync())
             .Include(o => o.LineItems)
-            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(o => o.Id.Value == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Order?>> GetAllWithLineItemsAsync(CancellationToken cancellationToken = default)

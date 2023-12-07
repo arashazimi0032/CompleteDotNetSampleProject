@@ -11,6 +11,10 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(au => au.CustomerId).HasConversion(
+            customerId => customerId.Value, 
+            value => new CustomerId(value));
+
         builder.HasOne<Customer>()
             .WithOne()
             .HasForeignKey<ApplicationUser>(au => au.CustomerId)

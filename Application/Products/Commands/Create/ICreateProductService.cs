@@ -1,6 +1,8 @@
-﻿namespace Application.Products.Commands.Create;
+﻿using Domain.Shared;
+
+namespace Application.Products.Commands.Create;
 
 public interface ICreateProductService
 {
-    Task CreateProduct(string name, decimal price, CancellationToken cancellationToken = default);
+    Task CreateProduct(string name, Money price, CancellationToken cancellationToken = default);
 }

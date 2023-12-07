@@ -1,6 +1,7 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories;
 using Domain.Orders;
+using Domain.Products;
 using MediatR;
 
 namespace Application.Orders.Commands.Update;
@@ -18,23 +19,25 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
     {
         var order = await _unitOfWork.Order.GetByIdWithLineItemsAsync(command.OrderId, cancellationToken);
 
+        var lineItems = new List<LineItem>();
+
         if (order is null)
         {
             throw new OrderNotFoundException(command.OrderId);
         }
 
-        foreach (var tuple in command.Request.LineItemId.Zip(
-                     command.Request.ProductId, 
-                     (lineItemId, productId) => (lineItemId, productId)))
+        foreach (var productId in command.Request.ProductId)
         {
-            var lineItem = order.LineItems.SingleOrDefault(li => li.Id == tuple.lineItemId);
-            if (lineItem is null)
-            {
-                throw new LineItemNotFoundException(tuple.lineItemId);
-            }
+            var product = await _unitOfWork.Product.GetByIdAsync(productId, cancellationToken);
 
-            lineItem.ProductId = tuple.productId;
+            if (product is null)
+                throw new ProductNotFoundException(productId);
+
+            var lineItem = LineItem.Create(new OrderId(command.OrderId), new ProductId(productId), product.Price);
+            lineItems.Add(lineItem);
         }
+
+        order.Update(lineItems);
 
         _unitOfWork.Order.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

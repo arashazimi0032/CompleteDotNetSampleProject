@@ -6,8 +6,7 @@ using Application.Products.Queries.GetAll;
 using Domain.Attributes;
 using Domain.Enums;
 using Domain.Exceptions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -21,6 +20,7 @@ public class ProductsController : ControllerBase
     private readonly IUpdateProductService _updateProductService;
     private readonly IGetProductService _getProductService;
     private readonly IGetAllProductsService _getAllProductsService;
+
     public ProductsController(
         IGetAllProductsService getAllProductsService, 
         IGetProductService getProductService, 
@@ -76,12 +76,16 @@ public class ProductsController : ControllerBase
         {
             return NotFound(e.Message);
         }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     // POST api/<ProductsController>
     [HttpPost]
     [CustomAuthorize(Role.Admin)]
-    public async Task<IActionResult> Post(string name, decimal price, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Post(string name, Money price, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {

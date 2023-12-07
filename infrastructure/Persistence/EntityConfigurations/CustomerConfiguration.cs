@@ -10,7 +10,11 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.Email).HasMaxLength(150).IsRequired();
+        builder.Property(c => c.Id).HasConversion(
+            customerId => customerId.Value,
+            value => new CustomerId(value));
+
+        builder.Property(c => c.Email).HasMaxLength(255).IsRequired();
         
         builder.Property(c => c.Name).HasMaxLength(150);
 

@@ -11,11 +11,19 @@ internal class LineItemConfiguration : IEntityTypeConfiguration<LineItem>
     {
         builder.HasKey(li => li.Id);
 
+        builder.Property(li => li.Id).HasConversion(
+            lineItemId => lineItemId.Value, 
+            value => new LineItemId(value));
+
         builder.HasOne<Product>()
             .WithMany()
             .HasForeignKey(li => li.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
-        
-        builder.Property(li => li.Price).HasColumnType("decimal(18, 2)");
+
+        builder.OwnsOne(li => li.Price, priceBuilder =>
+        {
+            priceBuilder.Property(m => m.Currency).HasMaxLength(3);
+            priceBuilder.Property(m => m.Amount).HasColumnType("decimal(18, 2)");
+        });
     }
 }

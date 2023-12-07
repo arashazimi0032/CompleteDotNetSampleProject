@@ -1,6 +1,7 @@
 ﻿using Application.Orders.Queries.Share;
 using Domain.Exceptions;
 using Domain.IRepositories;
+using Domain.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,8 +30,8 @@ internal sealed class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, Orde
         //return response;
 
         var response = await (await _unitOfWork.Order.GetQueryableAsync())
-            .Where(o => o.Id == request.OrderId)
-            .Select(o => new OrderResponse(o.Id, o.CustomerId, o.LineItems))
+            .Where(o => o.Id == new OrderId(request.OrderId))
+            .Select(o => new OrderResponse(o.Id.Value, o.CustomerId!.Value, o.LineItems))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (response is null)

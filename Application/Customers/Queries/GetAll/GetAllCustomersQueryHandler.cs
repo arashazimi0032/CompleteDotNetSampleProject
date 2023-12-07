@@ -18,7 +18,7 @@ internal sealed class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustom
         var customers = await _unitOfWork.Customer.GetAllAsync(cancellationToken);
 
         return customers
-            .Select(c => new CustomerResponse(c.Id, c.Name, c.Email))
+            .Select(c => new CustomerResponse(c.Id.Value, c.Name, c.Email))
             .ToList();
     }
 }

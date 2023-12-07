@@ -52,20 +52,16 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
             };
         }
 
-        var customerId = Guid.NewGuid();
+        var customer = Customer.Create(
+            request.UserName,
+            request.Email
+        );
 
         var applicationUser = new ApplicationUser
         {
             UserName = request.UserName,
             Email = request.Email,
-            CustomerId = customerId
-        };
-
-        var customer = new Customer()
-        {
-            Id = customerId,
-            Name = request.UserName,
-            Email = request.Email
+            CustomerId = customer.Id,
         };
 
         await using (var transaction =

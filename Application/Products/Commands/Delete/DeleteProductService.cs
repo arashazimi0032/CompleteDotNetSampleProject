@@ -1,5 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories;
+using Domain.Products;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace Application.Products.Commands.Delete;
