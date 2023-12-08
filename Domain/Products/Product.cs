@@ -5,7 +5,7 @@ namespace Domain.Products;
 
 public class Product : Entity<ProductId>
 {
-    public Product(ProductId id) : base(id)
+    private Product(ProductId id) : base(id)
     {
 
     }
