@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Persistence.Repositories;
 
-public sealed class OrderRepository : Repository<Order>, IOrderRepository
+public sealed class OrderRepository : Repository<Order, OrderId>, IOrderRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -13,11 +13,11 @@ public sealed class OrderRepository : Repository<Order>, IOrderRepository
         _context = context;
     }
 
-    public async Task<Order?> GetByIdWithLineItemsAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Order?> GetByIdWithLineItemsAsync(OrderId id, CancellationToken cancellationToken = default)
     {
         return await (await GetQueryableAsync())
             .Include(o => o.LineItems)
-            .FirstOrDefaultAsync(o => o.Id.Value == id, cancellationToken);
+            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Order?>> GetAllWithLineItemsAsync(CancellationToken cancellationToken = default)

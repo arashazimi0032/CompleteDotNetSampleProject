@@ -2,6 +2,6 @@
 
 namespace Domain.IRepositories;
 
-public interface ILineItemRepository : IRepository<LineItem>
+public interface ILineItemRepository : IRepository<LineItem, LineItemId>
 {
 }

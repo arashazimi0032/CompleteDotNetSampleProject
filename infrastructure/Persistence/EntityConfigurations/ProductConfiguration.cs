@@ -12,7 +12,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.Id).HasConversion(
             productId => productId.Value,
-            value => new ProductId(value));
+            value => ProductId.Create(value));
 
         builder.OwnsOne(p => p.Price, priceBuilder =>
         {

@@ -3,19 +3,20 @@ using Domain.Shared;
 
 namespace Domain.Products;
 
-public class Product : Entity
+public class Product : Entity<ProductId>
 {
-    private Product()
+    public Product(ProductId id) : base(id)
     {
+
+    }
+    private Product(ProductId id, string name, Money price) : base(id)
+    {
+        Name = name;
+        Price = price;
     }
     public static Product Create(string name, Money price)
     {
-        return new Product
-        {
-            Id = new ProductId(Guid.NewGuid()),
-            Name = name,
-            Price = price
-        };
+        return new Product(ProductId.CreateUnique(), name, price);
     }
 
     public void Update(string name, Money price)
@@ -23,8 +24,6 @@ public class Product : Entity
         Name = name;
         Price = price;
     }
-
-    public ProductId Id { get; private set; }
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; private set; }
     public Money Price { get; private set; }
 }

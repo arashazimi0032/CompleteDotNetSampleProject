@@ -13,7 +13,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.Property(au => au.CustomerId).HasConversion(
             customerId => customerId.Value, 
-            value => new CustomerId(value));
+            value => CustomerId.Create(value));
 
         builder.HasOne<Customer>()
             .WithOne()

@@ -21,7 +21,7 @@ internal sealed class GetCustomerQueryHandler : IRequestHandler<GetCustomerQuery
         var queryable = await _unitOfWork.Customer.GetQueryableAsync();
 
         var response = await queryable
-            .Where(c => c.Id == new CustomerId(request.Id))
+            .Where(c => c.Id == CustomerId.Create(request.Id))
             .Select(c => new CustomerResponse(c.Id.Value, c.Name, c.Email))
             .FirstOrDefaultAsync(cancellationToken);
 

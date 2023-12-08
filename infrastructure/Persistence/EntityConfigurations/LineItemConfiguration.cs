@@ -1,5 +1,6 @@
 ﻿using Domain.Orders;
 using Domain.Products;
+using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ internal class LineItemConfiguration : IEntityTypeConfiguration<LineItem>
 
         builder.Property(li => li.Id).HasConversion(
             lineItemId => lineItemId.Value, 
-            value => new LineItemId(value));
+            value => LineItemId.Create(value));
 
         builder.HasOne<Product>()
             .WithMany()
@@ -22,8 +23,8 @@ internal class LineItemConfiguration : IEntityTypeConfiguration<LineItem>
 
         builder.OwnsOne(li => li.Price, priceBuilder =>
         {
-            priceBuilder.Property(m => m.Currency).HasMaxLength(3);
             priceBuilder.Property(m => m.Amount).HasColumnType("decimal(18, 2)");
+            priceBuilder.Property(m => m.Currency).HasMaxLength(3);
         });
     }
 }

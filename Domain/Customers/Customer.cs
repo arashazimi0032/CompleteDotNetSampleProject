@@ -2,19 +2,16 @@
 
 namespace Domain.Customers;
 
-public class Customer : Entity
+public class Customer : Entity<CustomerId>
 {
-    private Customer()
+    private Customer(CustomerId id, string name, string email) : base(id)
     {
+        Name = name;
+        Email = email;
     }
     public static Customer Create(string name, string email)
     {
-        return new Customer
-        {
-            Id = new CustomerId(Guid.NewGuid()),
-            Name = name,
-            Email = email,
-        };
+        return new Customer(CustomerId.CreateUnique(), name, email);
     }
 
     public void Update(string? name, string? email)
@@ -23,7 +20,6 @@ public class Customer : Entity
         if (email is not null) Email = email;
     }
 
-    public CustomerId Id { get; private set; }
-    public string Name { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
+    public string Name { get; private set; }
+    public string Email { get; private set; }
 }

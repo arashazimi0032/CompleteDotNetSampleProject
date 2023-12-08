@@ -2,8 +2,9 @@
 
 namespace Domain.IRepositories;
 
-public interface IRepository<T> 
-    where T : Entity
+public interface IRepository<T, in TId> 
+    where T : Entity<TId>
+    where TId : notnull
 {
     IQueryable<T> GetQueryable();
     
@@ -11,7 +12,7 @@ public interface IRepository<T>
 
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
 
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 

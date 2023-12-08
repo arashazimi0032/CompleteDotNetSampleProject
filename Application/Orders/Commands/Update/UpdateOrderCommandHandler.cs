@@ -17,7 +17,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
     public async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
-        var order = await _unitOfWork.Order.GetByIdWithLineItemsAsync(command.OrderId, cancellationToken);
+        var order = await _unitOfWork.Order.GetByIdWithLineItemsAsync(OrderId.Create(command.OrderId), cancellationToken);
 
         var lineItems = new List<LineItem>();
 
@@ -28,12 +28,12 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
         foreach (var productId in command.Request.ProductId)
         {
-            var product = await _unitOfWork.Product.GetByIdAsync(productId, cancellationToken);
+            var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
 
             if (product is null)
                 throw new ProductNotFoundException(productId);
 
-            var lineItem = LineItem.Create(new OrderId(command.OrderId), new ProductId(productId), product.Price);
+            var lineItem = LineItem.Create(OrderId.Create(command.OrderId), ProductId.Create(productId), product.Price);
             lineItems.Add(lineItem);
         }
 

@@ -2,9 +2,9 @@
 
 namespace Domain.IRepositories;
 
-public interface IOrderRepository : IRepository<Order>
+public interface IOrderRepository : IRepository<Order, OrderId>
 {
-    Task<Order?> GetByIdWithLineItemsAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Order?> GetByIdWithLineItemsAsync(OrderId id, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Order?>> GetAllWithLineItemsAsync(CancellationToken cancellationToken = default);
 }

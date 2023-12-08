@@ -3,7 +3,7 @@ using Domain.IRepositories;
 
 namespace infrastructure.Persistence.Repositories;
 
-public sealed class CustomerRepository : Repository<Customer>, ICustomerRepository
+public sealed class CustomerRepository : Repository<Customer, CustomerId>, ICustomerRepository
 {
     private readonly ApplicationDbContext _context;
 

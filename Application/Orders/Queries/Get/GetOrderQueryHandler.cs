@@ -30,7 +30,7 @@ internal sealed class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, Orde
         //return response;
 
         var response = await (await _unitOfWork.Order.GetQueryableAsync())
-            .Where(o => o.Id == new OrderId(request.OrderId))
+            .Where(o => o.Id == OrderId.Create(request.OrderId))
             .Select(o => new OrderResponse(o.Id.Value, o.CustomerId!.Value, o.LineItems))
             .FirstOrDefaultAsync(cancellationToken);
 

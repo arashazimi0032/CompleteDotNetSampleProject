@@ -30,8 +30,7 @@ public sealed class GetProductService : IGetProductService
         var queryTask = await _unitOfWork.Product.GetQueryableAsync();
 
         var response = await queryTask
-            .Where(p => p.Id == new ProductId(id))
-            .AsNoTracking()
+            .Where(p => p.Id == ProductId.Create(id))
             .Select(p => new ProductResponse(p.Id.Value, p.Name, p.Price))
             .FirstOrDefaultAsync(cancellationToken);
 

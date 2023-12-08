@@ -12,7 +12,7 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.Property(c => c.Id).HasConversion(
             customerId => customerId.Value,
-            value => new CustomerId(value));
+            value => CustomerId.Create(value));
 
         builder.Property(c => c.Email).HasMaxLength(255).IsRequired();
         

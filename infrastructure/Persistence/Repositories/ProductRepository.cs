@@ -3,7 +3,7 @@ using Domain.Products;
 
 namespace infrastructure.Persistence.Repositories;
 
-public sealed class ProductRepository : Repository<Product>, IProductRepository
+public sealed class ProductRepository : Repository<Product, ProductId>, IProductRepository
 {
     private readonly ApplicationDbContext _context;
 

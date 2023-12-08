@@ -6,8 +6,9 @@ using System.Collections.Generic;
 
 namespace infrastructure.Persistence.Repositories;
 
-public class Repository<T> : IRepository<T>
-    where T : Entity
+public class Repository<T, TId> : IRepository<T, TId>
+    where T : Entity<TId>
+    where TId : notnull
 {
     private readonly ApplicationDbContext _context;
     internal DbSet<T> dbSet;
@@ -33,7 +34,7 @@ public class Repository<T> : IRepository<T>
         return await dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
         return await dbSet.FindAsync(
                 new object?[] { id, cancellationToken }, 

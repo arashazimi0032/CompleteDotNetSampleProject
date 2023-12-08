@@ -3,7 +3,7 @@ using Domain.Orders;
 
 namespace infrastructure.Persistence.Repositories;
 
-public sealed class LineItemRepository : Repository<LineItem>, ILineItemRepository
+public sealed class LineItemRepository : Repository<LineItem, LineItemId>, ILineItemRepository
 {
     private readonly ApplicationDbContext _context;
 

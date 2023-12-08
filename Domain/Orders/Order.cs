@@ -5,13 +5,12 @@ using Domain.Shared;
 
 namespace Domain.Orders;
 
-public class Order : Entity
+public class Order : Entity<OrderId>
 {
-    private Order()
+    private Order(OrderId id, CustomerId customerId) : base(id)
     {
+        CustomerId = customerId;
     }
-
-    public OrderId Id { get; private set; }
     public CustomerId CustomerId { get; private set; }
     
     private readonly HashSet<LineItem> _lineItems = new();
@@ -19,13 +18,7 @@ public class Order : Entity
 
     public static Order Create(CustomerId customerId)
     {
-        var order = new Order
-        {
-            Id = new OrderId(Guid.NewGuid()), 
-            CustomerId = customerId,
-        };
-
-        return order;
+        return new Order(OrderId.CreateUnique(), customerId);
     }
 
     public void Update(IEnumerable<LineItem> lineItems)

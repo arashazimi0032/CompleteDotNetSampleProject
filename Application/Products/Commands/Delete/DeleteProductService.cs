@@ -16,7 +16,7 @@ public sealed class DeleteProductService : IDeleteProductService
 
     public async Task DeleteProduct(Guid id, CancellationToken cancellationToken = default)
     {
-        var product = await _unitOfWork.Product.GetByIdAsync(id, cancellationToken);
+        var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {

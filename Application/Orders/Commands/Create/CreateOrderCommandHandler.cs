@@ -22,18 +22,18 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
     public async Task Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = Order.Create(new CustomerId(request.CustomerId));
+        var order = Order.Create(CustomerId.Create(request.CustomerId));
 
         foreach (var productId in request.ProductId)
         {
-            var product = await _unitOfWork.Product.GetByIdAsync(productId, cancellationToken);
+            var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
 
             if (product is null)
             {
                 throw new ProductNotFoundException(productId);
             }
 
-            order.Add(new ProductId(productId), product.Price);
+            order.Add(ProductId.Create(productId), product.Price);
             
         }
 

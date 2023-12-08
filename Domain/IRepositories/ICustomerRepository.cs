@@ -2,6 +2,6 @@
 
 namespace Domain.IRepositories;
 
-public interface ICustomerRepository : IRepository<Customer>
+public interface ICustomerRepository : IRepository<Customer, CustomerId>
 {
 }
