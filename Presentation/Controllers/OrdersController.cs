@@ -56,7 +56,11 @@ namespace Presentation.Controllers
             }
             catch (Exception e)
             {
-                return NotFound(e.Message);
+                if (e.InnerException != null)
+                {
+                    return BadRequest(e.Message + "\n" + e.InnerException.Message);
+                }
+                return BadRequest(e.Message);
             }
         }
 

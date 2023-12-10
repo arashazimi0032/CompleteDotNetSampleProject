@@ -1,22 +1,19 @@
-﻿using Domain.ApplicationUsers;
-using Domain.Customers;
+﻿using Domain.Customers;
 using Domain.Exceptions;
 using Domain.IRepositories;
 using Domain.Orders;
 using Domain.Products;
+using Domain.Shared;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Orders.Commands.Create;
 
 internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateOrderCommandHandler(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
+    public CreateOrderCommandHandler(IUnitOfWork unitOfWork)
     {
-        _userManager = userManager;
         _unitOfWork = unitOfWork;
     }
 
@@ -33,17 +30,10 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
                 throw new ProductNotFoundException(productId);
             }
 
-            order.Add(ProductId.Create(productId), product.Price);
+            var price = new Money(product.Price.Currency, product.Price.Amount);
+            order.Add(ProductId.Create(productId), price);
             
         }
-
-
-        //var order = new Order
-        //{
-        //    Id = orderId,
-        //    CustomerId = request.CustomerId,
-        //    LineItems = lineItems
-        //};
 
         await _unitOfWork.Order.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

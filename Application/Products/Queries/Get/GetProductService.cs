@@ -18,26 +18,14 @@ public sealed class GetProductService : IGetProductService
     public async Task<ProductResponse> GetProduct(Guid id, CancellationToken cancellationToken = default)
     {
 
-        //var product = await _unitOfWork.Product.GetByIdAsync(id, cancellationToken);
+        var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
-        //if (product is null)
-        //{
-        //    throw new ProductNotFoundException(id);
-        //}
-
-        //var response = new ProductResponse(id, product.Name, product.Price);
-
-        var queryTask = await _unitOfWork.Product.GetQueryableAsync();
-
-        var response = await queryTask
-            .Where(p => p.Id == ProductId.Create(id))
-            .Select(p => new ProductResponse(p.Id.Value, p.Name, p.Price))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (response is null)
+        if (product is null)
         {
             throw new ProductNotFoundException(id);
         }
+
+        var response = new ProductResponse(id, product.Name, product.Price);
 
         return response;
     }

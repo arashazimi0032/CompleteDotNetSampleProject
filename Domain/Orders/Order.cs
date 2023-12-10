@@ -14,7 +14,7 @@ public class Order : Entity<OrderId>
     public CustomerId CustomerId { get; private set; }
     
     private readonly HashSet<LineItem> _lineItems = new();
-    public IReadOnlyList<LineItem> LineItems => _lineItems.ToList();
+    public IReadOnlySet<LineItem> LineItems => _lineItems.ToHashSet();
 
     public static Order Create(CustomerId customerId)
     {

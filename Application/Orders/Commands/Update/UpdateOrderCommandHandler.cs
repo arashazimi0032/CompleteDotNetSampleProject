@@ -2,6 +2,7 @@
 using Domain.IRepositories;
 using Domain.Orders;
 using Domain.Products;
+using Domain.Shared;
 using MediatR;
 
 namespace Application.Orders.Commands.Update;
@@ -33,7 +34,8 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
             if (product is null)
                 throw new ProductNotFoundException(productId);
 
-            var lineItem = LineItem.Create(OrderId.Create(command.OrderId), ProductId.Create(productId), product.Price);
+            var price = new Money(product.Price.Currency, product.Price.Amount);
+            var lineItem = LineItem.Create(OrderId.Create(command.OrderId), ProductId.Create(productId), price);
             lineItems.Add(lineItem);
         }
 
