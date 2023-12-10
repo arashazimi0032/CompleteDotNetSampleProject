@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Email;
-using Domain.IRepositories;
-using infrastructure.Persistence.Repositories;
+using Domain.IRepositories.UnitOfWorks;
+using infrastructure.Persistence.Repositories.UnitOfWorks;
 using infrastructure.Services.Email;
 using Microsoft.Extensions.DependencyInjection;
 

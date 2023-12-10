@@ -1,5 +1,5 @@
 ﻿using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
 using Domain.Products;
 using Domain.Shared;
@@ -18,7 +18,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
     public async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
-        var order = await _unitOfWork.Order.GetByIdWithLineItemsAsync(OrderId.Create(command.OrderId), cancellationToken);
+        var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsAsync(OrderId.Create(command.OrderId), cancellationToken);
 
         var lineItems = new List<LineItem>();
 
@@ -29,7 +29,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
         foreach (var productId in command.Request.ProductId)
         {
-            var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
+            var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
 
             if (product is null)
                 throw new ProductNotFoundException(productId);
@@ -41,7 +41,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
         order.Update(lineItems);
 
-        _unitOfWork.Order.Update(order);
+        _unitOfWork.Commands.Order.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

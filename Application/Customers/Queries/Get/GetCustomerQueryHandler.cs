@@ -1,7 +1,7 @@
 ﻿using Application.Customers.Queries.Share;
 using Domain.Customers;
 using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +18,7 @@ internal sealed class GetCustomerQueryHandler : IRequestHandler<GetCustomerQuery
 
     public async Task<CustomerResponse> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
     {
-        var queryable = await _unitOfWork.Customer.GetQueryableAsync();
+        var queryable = await _unitOfWork.Queries.Customer.GetQueryableAsync();
 
         var response = await queryable
             .Where(c => c.Id == CustomerId.Create(request.Id))

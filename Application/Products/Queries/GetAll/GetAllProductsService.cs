@@ -1,5 +1,5 @@
 ﻿using Application.Products.Queries.Share;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 
 namespace Application.Products.Queries.GetAll;
 
@@ -14,7 +14,7 @@ public sealed class GetAllProductsService : IGetAllProductsService
 
     public async Task<IEnumerable<ProductResponse>> GetAllProducts(CancellationToken cancellationToken = default)
     {
-        var products = await _unitOfWork.Product.GetAllAsync(cancellationToken);
+        var products = await _unitOfWork.Queries.Product.GetAllAsync(cancellationToken);
 
         return products
             .Select(p => new ProductResponse(p.Id.Value, p.Name, p.Price))

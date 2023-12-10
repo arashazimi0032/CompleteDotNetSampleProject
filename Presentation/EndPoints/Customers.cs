@@ -10,7 +10,7 @@ public class Customers : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var customer = app.MapGroup("/api").WithTags("Customer");
+        var customer = app.MapGroup("/api").WithTags("CustomerCommand");
 
         customer.MapGet("customers/{id:Guid}", async (Guid id, ISender sender) =>
         {

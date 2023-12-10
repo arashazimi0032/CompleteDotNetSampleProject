@@ -18,7 +18,7 @@ namespace infrastructure.Migrations
                 values: new object[,]
                 {
                     { "71887762-54ae-4cb5-9e81-fd68dba18ca3", null, "Admin", "ADMIN" },
-                    { "c973a960-0920-4405-8f57-908a78201b3a", null, "Customer", "CUSTOMER" }
+                    { "c973a960-0920-4405-8f57-908a78201b3a", null, "CustomerCommand", "CUSTOMER" }
                 });
         }
 

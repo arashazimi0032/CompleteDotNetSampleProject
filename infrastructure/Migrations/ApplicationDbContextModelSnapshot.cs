@@ -93,7 +93,7 @@ namespace infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Customers.Customer", b =>
+            modelBuilder.Entity("Domain.Customers.CustomerCommand", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -301,7 +301,7 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("Domain.ApplicationUsers.ApplicationUser", b =>
                 {
-                    b.HasOne("Domain.Customers.Customer", null)
+                    b.HasOne("Domain.Customers.CustomerCommand", null)
                         .WithOne()
                         .HasForeignKey("Domain.ApplicationUsers.ApplicationUser", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -349,7 +349,7 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Orders.Order", b =>
                 {
-                    b.HasOne("Domain.Customers.Customer", null)
+                    b.HasOne("Domain.Customers.CustomerCommand", null)
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)

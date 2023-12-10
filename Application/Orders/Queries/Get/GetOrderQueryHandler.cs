@@ -1,6 +1,6 @@
 ﻿using Application.Orders.Queries.Share;
 using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,18 +18,7 @@ internal sealed class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, Orde
 
     public async Task<OrderResponse> Handle(GetOrderQuery request, CancellationToken cancellationToken)
     {
-        //var order = await _unitOfWork.Order.GetByIdAsync(request.OrderId, cancellationToken);
-        
-        //if (order is null)
-        //{
-        //    throw new OrderNotFoundException(request.OrderId);
-        //}
-
-        //var response = new OrderResponse(order.Id, order.CustomerId, order.LineItems);
-
-        //return response;
-
-        var response = await (await _unitOfWork.Order.GetQueryableAsync())
+        var response = await (await _unitOfWork.Queries.Order.GetQueryableAsync())
             .Where(o => o.Id == OrderId.Create(request.OrderId))
             .Select(o => new OrderResponse(o.Id.Value, o.CustomerId!.Value, o.LineItems))
             .FirstOrDefaultAsync(cancellationToken);

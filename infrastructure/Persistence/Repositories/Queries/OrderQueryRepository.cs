@@ -1,14 +1,14 @@
-﻿using Domain.IRepositories;
+﻿using Domain.IRepositories.Queries;
 using Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 
-namespace infrastructure.Persistence.Repositories;
+namespace infrastructure.Persistence.Repositories.Queries;
 
-public sealed class OrderRepository : Repository<Order, OrderId>, IOrderRepository
+public sealed class OrderQueryRepository : QueryRepository<Order, OrderId>, IOrderQueryRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public OrderRepository(ApplicationDbContext context) : base(context)
+    public OrderQueryRepository(ApplicationDbContext context) : base(context)
     {
         _context = context;
     }

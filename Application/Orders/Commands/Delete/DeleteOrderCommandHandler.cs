@@ -1,5 +1,5 @@
 ﻿using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
 using MediatR;
 
@@ -16,14 +16,14 @@ internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 
     public async Task Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _unitOfWork.Order.GetByIdAsync(OrderId.Create(request.OrderId), cancellationToken);
+        var order = await _unitOfWork.Queries.Order.GetByIdAsync(OrderId.Create(request.OrderId), cancellationToken);
 
         if (order is null)
         {
             throw new OrderNotFoundException(request.OrderId);
         }
 
-        _unitOfWork.Order.Remove(order);
+        _unitOfWork.Commands.Order.Remove(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Application.Orders.Queries.Share;
-using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 
 namespace Application.Orders.Queries.GetAll;
@@ -16,7 +15,7 @@ internal sealed class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQue
 
     public async Task<IEnumerable<OrderResponse>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
-        var orders = await  _unitOfWork.Order.GetAllWithLineItemsAsync(cancellationToken);
+        var orders = await  _unitOfWork.Queries.Order.GetAllWithLineItemsAsync(cancellationToken);
 
         var response = orders
             .Select(o => new OrderResponse(o!.Id.Value, o.CustomerId.Value, o.LineItems))

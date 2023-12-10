@@ -1,8 +1,7 @@
 ﻿using Application.Products.Queries.Share;
 using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Products;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Products.Queries.Get;
 
@@ -18,7 +17,7 @@ public sealed class GetProductService : IGetProductService
     public async Task<ProductResponse> GetProduct(Guid id, CancellationToken cancellationToken = default)
     {
 
-        var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
+        var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {

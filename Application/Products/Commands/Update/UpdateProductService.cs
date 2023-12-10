@@ -1,5 +1,5 @@
 ﻿using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Products;
 using Domain.Shared;
 
@@ -16,7 +16,7 @@ public sealed class UpdateProductService : IUpdateProductService
 
     public async Task UpdateProduct(Guid id, string name, Money price, CancellationToken cancellationToken = default)
     {
-        var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
+        var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {
@@ -25,7 +25,7 @@ public sealed class UpdateProductService : IUpdateProductService
 
         product.Update(name, price);
         
-        _unitOfWork.Product.Update(product);
+        _unitOfWork.Commands.Product.Update(product);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

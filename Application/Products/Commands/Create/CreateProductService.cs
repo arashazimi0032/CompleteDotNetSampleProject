@@ -1,4 +1,4 @@
-﻿using Domain.IRepositories;
+﻿using Domain.IRepositories.UnitOfWorks;
 using Domain.Products;
 using Domain.Shared;
 
@@ -19,7 +19,7 @@ public sealed class CreateProductService : ICreateProductService
             name, 
             price);
 
-        await _unitOfWork.Product.AddAsync(product, cancellationToken);
+        await _unitOfWork.Commands.Product.AddAsync(product, cancellationToken);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -1,6 +1,6 @@
 ﻿using Application.ApplicationUsers.Share;
 using Domain.ApplicationUsers;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -46,10 +46,10 @@ internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserComma
                     };
                 }
                 
-                var customer = await _unitOfWork.Customer.GetByIdAsync(user.CustomerId, cancellationToken);
+                var customer = await _unitOfWork.Queries.Customer.GetByIdAsync(user.CustomerId, cancellationToken);
                 if (customer is not null)
                 {
-                    _unitOfWork.Customer.Remove(customer);
+                    _unitOfWork.Commands.Customer.Remove(customer);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
                 }
 

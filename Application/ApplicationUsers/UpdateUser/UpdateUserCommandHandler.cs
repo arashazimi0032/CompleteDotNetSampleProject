@@ -1,7 +1,7 @@
 ﻿using Application.ApplicationUsers.Share;
 using Domain.ApplicationUsers;
 using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,7 +24,7 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
     {
         var user = await _userManager.FindByIdAsync(command.Id.ToString()) ?? throw new UserNotFoundException(command.Id);
 
-        var customer = await _unitOfWork.Customer.GetByIdAsync(user.CustomerId, cancellationToken);
+        var customer = await _unitOfWork.Queries.Customer.GetByIdAsync(user.CustomerId, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(command.Request.UserName))
         {
@@ -44,7 +44,7 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
             {
                 if (customer is not null)
                 {
-                    _unitOfWork.Customer.Update(customer);
+                    _unitOfWork.Commands.Customer.Update(customer);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
                 }
 

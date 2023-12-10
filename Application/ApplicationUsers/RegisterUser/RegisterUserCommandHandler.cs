@@ -5,6 +5,8 @@ using Domain.ApplicationUsers;
 using Domain.Customers;
 using Domain.Enums;
 using Domain.IRepositories;
+using Domain.IRepositories.Queries;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -69,7 +71,7 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
         {
             try
             {
-                await _unitOfWork.Customer.AddAsync(customer, cancellationToken);
+                await _unitOfWork.Commands.Customer.AddAsync(customer, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 // TODO : the code for creating customer and add it to database is repeated in CreateCustomerCommandHandler. It should be convert to a service

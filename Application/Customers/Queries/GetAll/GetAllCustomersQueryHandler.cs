@@ -1,5 +1,5 @@
 ﻿using Application.Customers.Queries.Share;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 
 namespace Application.Customers.Queries.GetAll;
@@ -15,7 +15,7 @@ internal sealed class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustom
 
     public async Task<IEnumerable<CustomerResponse>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        var customers = await _unitOfWork.Customer.GetAllAsync(cancellationToken);
+        var customers = await _unitOfWork.Queries.Customer.GetAllAsync(cancellationToken);
 
         return customers
             .Select(c => new CustomerResponse(c.Id.Value, c.Name, c.Email))

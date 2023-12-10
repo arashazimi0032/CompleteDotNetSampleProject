@@ -1,8 +1,8 @@
 ﻿using Domain.Orders;
 
-namespace Domain.IRepositories;
+namespace Domain.IRepositories.Queries;
 
-public interface IOrderRepository : IRepository<Order, OrderId>
+public interface IOrderQueryRepository : IQueryRepository<Order, OrderId>
 {
     Task<Order?> GetByIdWithLineItemsAsync(OrderId id, CancellationToken cancellationToken = default);
 

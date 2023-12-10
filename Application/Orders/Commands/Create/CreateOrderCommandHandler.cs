@@ -1,6 +1,6 @@
 ﻿using Domain.Customers;
 using Domain.Exceptions;
-using Domain.IRepositories;
+using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
 using Domain.Products;
 using Domain.Shared;
@@ -23,7 +23,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
         foreach (var productId in request.ProductId)
         {
-            var product = await _unitOfWork.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
+            var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
 
             if (product is null)
             {
@@ -35,7 +35,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
             
         }
 
-        await _unitOfWork.Order.AddAsync(order, cancellationToken);
+        await _unitOfWork.Commands.Order.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -32,7 +32,7 @@ namespace infrastructure.Migrations
                 values: new object[,]
                 {
                     { "6d80f98c-e18d-4d03-8c33-5aa84c4e055a", null, "Admin", null },
-                    { "acac10ea-baf3-4b73-9619-df6438df29e4", null, "Customer", null }
+                    { "acac10ea-baf3-4b73-9619-df6438df29e4", null, "CustomerCommand", null }
                 });
         }
     }
