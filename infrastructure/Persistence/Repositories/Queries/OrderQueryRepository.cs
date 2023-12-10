@@ -17,6 +17,7 @@ public sealed class OrderQueryRepository : QueryRepository<Order, OrderId>, IOrd
     {
         return await (await GetQueryableAsync())
             .Include(o => o.LineItems)
+            .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
@@ -24,6 +25,7 @@ public sealed class OrderQueryRepository : QueryRepository<Order, OrderId>, IOrd
     {
         return await (await GetQueryableAsync())
             .Include(o => o.LineItems)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 }

@@ -19,23 +19,26 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>
 
     public IQueryable<T> GetQueryable()
     {
-        return dbSet;
+        return dbSet.AsNoTracking();
     }
 
     public async Task<IQueryable<T>> GetQueryableAsync()
     {
-        return dbSet;
+        return dbSet.AsNoTracking();
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await dbSet.ToListAsync(cancellationToken);
+        return await dbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     public async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await dbSet.FindAsync(
+        var entity = await dbSet.FindAsync(
                 new object?[] { id, cancellationToken },
                 cancellationToken: cancellationToken);
+
+        _context.Entry(entity!).State = EntityState.Detached;
+        return entity;
     }
 }
