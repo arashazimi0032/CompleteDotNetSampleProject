@@ -1,5 +1,6 @@
-﻿using Domain.Primitive;
-using Domain.Shared;
+﻿using Domain.Primitive.Models;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 
 namespace Domain.Products;
 

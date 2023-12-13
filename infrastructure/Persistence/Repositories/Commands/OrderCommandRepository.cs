@@ -1,5 +1,6 @@
 ﻿using Domain.IRepositories.Commands;
 using Domain.Orders;
+using Domain.Orders.ValueObjects;
 
 namespace infrastructure.Persistence.Repositories.Commands;
 

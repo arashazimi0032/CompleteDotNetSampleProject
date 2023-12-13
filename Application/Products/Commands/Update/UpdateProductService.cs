@@ -1,7 +1,7 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Products;
-using Domain.Shared;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 
 namespace Application.Products.Commands.Update;
 

@@ -1,6 +1,8 @@
-﻿namespace Domain.Orders;
+﻿using Domain.Primitive.Models;
 
-public record OrderId
+namespace Domain.Orders.ValueObjects;
+
+public record OrderId : ValueObject
 {
     public Guid Value { get; set; }
     private OrderId(Guid value)

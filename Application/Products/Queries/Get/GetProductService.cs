@@ -1,7 +1,7 @@
 ﻿using Application.Products.Queries.Share;
 using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Products;
+using Domain.Products.ValueObjects;
 
 namespace Application.Products.Queries.Get;
 

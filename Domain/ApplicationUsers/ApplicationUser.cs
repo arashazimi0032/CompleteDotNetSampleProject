@@ -1,4 +1,4 @@
-﻿using Domain.Customers;
+﻿using Domain.Customers.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.ApplicationUsers;

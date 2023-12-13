@@ -1,8 +1,8 @@
-﻿using Domain.Products;
+﻿using Domain.Primitive.Models;
 
-namespace Domain.Orders;
+namespace Domain.Orders.ValueObjects;
 
-public record LineItemId
+public record LineItemId : ValueObject
 {
     public Guid Value { get; set; }
     private LineItemId(Guid value)

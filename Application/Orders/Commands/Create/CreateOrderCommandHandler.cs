@@ -1,9 +1,9 @@
-﻿using Domain.Customers;
+﻿using Domain.Customers.ValueObjects;
 using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
-using Domain.Products;
-using Domain.Shared;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 using MediatR;
 
 namespace Application.Orders.Commands.Create;

@@ -1,6 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Products;
+using Domain.Products.ValueObjects;
 
 namespace Application.Products.Commands.Delete;
 

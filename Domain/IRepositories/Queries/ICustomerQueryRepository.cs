@@ -1,4 +1,5 @@
 ﻿using Domain.Customers;
+using Domain.Customers.ValueObjects;
 
 namespace Domain.IRepositories.Queries;
 

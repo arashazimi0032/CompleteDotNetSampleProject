@@ -1,11 +1,13 @@
-﻿using Domain.Customers;
-using Domain.Primitive;
-using Domain.Products;
-using Domain.Shared;
+﻿using Domain.Customers.ValueObjects;
+using Domain.Orders.Entities;
+using Domain.Orders.ValueObjects;
+using Domain.Primitive.Models;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 
 namespace Domain.Orders;
 
-public class Order : Entity<OrderId>
+public class Order : AggregateRoot<OrderId>
 {
     private Order(OrderId id, CustomerId customerId) : base(id)
     {

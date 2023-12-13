@@ -1,8 +1,9 @@
-﻿using Domain.Primitive;
-using Domain.Products;
-using Domain.Shared;
+﻿using Domain.Orders.ValueObjects;
+using Domain.Primitive.Models;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 
-namespace Domain.Orders;
+namespace Domain.Orders.Entities;
 
 public class LineItem : Entity<LineItemId>
 {

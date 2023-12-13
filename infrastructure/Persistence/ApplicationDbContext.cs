@@ -1,6 +1,7 @@
 ﻿using Domain.ApplicationUsers;
 using Domain.Customers;
 using Domain.Orders;
+using Domain.Orders.Entities;
 using Domain.Products;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

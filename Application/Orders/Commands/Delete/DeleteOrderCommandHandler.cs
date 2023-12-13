@@ -1,6 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Orders;
+using Domain.Orders.ValueObjects;
 using MediatR;
 
 namespace Application.Orders.Commands.Delete;

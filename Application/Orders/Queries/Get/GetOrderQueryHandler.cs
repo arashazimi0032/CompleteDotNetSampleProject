@@ -1,7 +1,7 @@
 ﻿using Application.Orders.Queries.Share;
 using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Orders;
+using Domain.Orders.ValueObjects;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

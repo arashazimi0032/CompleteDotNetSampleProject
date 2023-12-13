@@ -1,5 +1,6 @@
 ﻿using Domain.IRepositories.Queries;
 using Domain.Orders;
+using Domain.Orders.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Persistence.Repositories.Queries;

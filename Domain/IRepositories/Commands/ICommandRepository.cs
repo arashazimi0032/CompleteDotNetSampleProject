@@ -1,10 +1,10 @@
-﻿using Domain.Primitive;
+﻿using Domain.Primitive.Models;
 
 namespace Domain.IRepositories.Commands;
 
 public interface ICommandRepository<in T, in TId> 
     where T : Entity<TId>
-    where TId : notnull
+    where TId : ValueObject
 {
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 

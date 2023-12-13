@@ -1,8 +1,9 @@
 ﻿using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
-using Domain.Orders;
-using Domain.Products;
-using Domain.Shared;
+using Domain.Orders.Entities;
+using Domain.Orders.ValueObjects;
+using Domain.Products.ValueObjects;
+using Domain.Shared.ValueObjects;
 using MediatR;
 
 namespace Application.Orders.Commands.Update;

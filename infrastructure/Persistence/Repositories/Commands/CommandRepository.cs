@@ -1,12 +1,12 @@
 ﻿using Domain.IRepositories.Commands;
 using Microsoft.EntityFrameworkCore;
-using Domain.Primitive;
+using Domain.Primitive.Models;
 
 namespace infrastructure.Persistence.Repositories.Commands;
 
 public class CommandRepository<T, TId> : ICommandRepository<T, TId>
     where T : Entity<TId>
-    where TId : notnull
+    where TId : ValueObject
 {
     private readonly ApplicationDbContext _context;
     internal DbSet<T> dbSet;

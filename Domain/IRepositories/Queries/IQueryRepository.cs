@@ -1,10 +1,10 @@
-﻿using Domain.Primitive;
+﻿using Domain.Primitive.Models;
 
 namespace Domain.IRepositories.Queries;
 
 public interface IQueryRepository<T, in TId>
     where T : Entity<TId>
-    where TId : notnull
+    where TId : ValueObject
 {
     IQueryable<T> GetQueryable();
 

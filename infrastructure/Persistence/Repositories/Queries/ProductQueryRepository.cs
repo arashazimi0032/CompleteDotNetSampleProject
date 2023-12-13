@@ -1,5 +1,6 @@
 ﻿using Domain.IRepositories.Queries;
 using Domain.Products;
+using Domain.Products.ValueObjects;
 
 namespace infrastructure.Persistence.Repositories.Queries;
 

@@ -1,4 +1,5 @@
-﻿using Domain.Orders;
+﻿using Domain.Orders.Entities;
+using Domain.Orders.ValueObjects;
 using Domain.Products;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;

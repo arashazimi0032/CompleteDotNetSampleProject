@@ -1,4 +1,4 @@
-﻿using Domain.Orders;
+﻿using Domain.Orders.Entities;
 
 namespace Application.Orders.Queries.Share;
 

@@ -6,7 +6,7 @@ using Application.Products.Queries.GetAll;
 using Domain.Attributes;
 using Domain.Enums;
 using Domain.Exceptions;
-using Domain.Shared;
+using Domain.Shared.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;

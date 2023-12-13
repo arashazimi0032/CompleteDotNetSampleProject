@@ -1,6 +1,8 @@
-﻿namespace Domain.Customers;
+﻿using Domain.Primitive.Models;
 
-public record CustomerId
+namespace Domain.Customers.ValueObjects;
+
+public record CustomerId : ValueObject
 {
     public Guid Value { get; set; }
     private CustomerId(Guid value)

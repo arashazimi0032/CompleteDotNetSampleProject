@@ -1,5 +1,5 @@
 ﻿using Domain.Products;
-using Domain.Shared;
+using Domain.Shared.ValueObjects;
 
 namespace Application.Products.Commands.Update;
 

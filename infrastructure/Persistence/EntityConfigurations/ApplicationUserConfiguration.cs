@@ -1,5 +1,6 @@
 ﻿using Domain.ApplicationUsers;
 using Domain.Customers;
+using Domain.Customers.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

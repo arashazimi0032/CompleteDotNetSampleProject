@@ -1,5 +1,5 @@
 ﻿using Application.Customers.Queries.Share;
-using Domain.Customers;
+using Domain.Customers.ValueObjects;
 using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
 using MediatR;

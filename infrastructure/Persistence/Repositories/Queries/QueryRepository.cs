@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Primitive;
 using Domain.IRepositories.Queries;
+using Domain.Primitive.Models;
 
 namespace infrastructure.Persistence.Repositories.Queries;
 
 public class QueryRepository<T, TId> : IQueryRepository<T, TId>
     where T : Entity<TId>
-    where TId : notnull
+    where TId : ValueObject
 {
     private readonly ApplicationDbContext _context;
     internal DbSet<T> dbSet;
