@@ -2,8 +2,11 @@
 using Domain.Customers;
 using Domain.Orders;
 using Domain.Orders.Entities;
+using Domain.Primitive.Events;
+using Domain.Primitive.Models;
 using Domain.Products;
-using Microsoft.AspNetCore.Identity;
+using infrastructure.Persistence.Interceptors;
+using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +14,12 @@ namespace infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor) : base(options)
     {
+        _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
     }
 
     public DbSet<Customer> Customers { get; set; }
@@ -23,7 +30,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder
+            .Ignore<List<IDomainEvent>>()
+            .ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        base.OnConfiguring(optionsBuilder);
     }
 }

@@ -93,7 +93,7 @@ namespace infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Customers.CustomerCommand", b =>
+            modelBuilder.Entity("Domain.Customers.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -116,7 +116,7 @@ namespace infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Domain.Orders.LineItem", b =>
+            modelBuilder.Entity("Domain.Orders.Entities.LineItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -301,14 +301,14 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("Domain.ApplicationUsers.ApplicationUser", b =>
                 {
-                    b.HasOne("Domain.Customers.CustomerCommand", null)
+                    b.HasOne("Domain.Customers.Customer", null)
                         .WithOne()
                         .HasForeignKey("Domain.ApplicationUsers.ApplicationUser", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Orders.LineItem", b =>
+            modelBuilder.Entity("Domain.Orders.Entities.LineItem", b =>
                 {
                     b.HasOne("Domain.Orders.Order", null)
                         .WithMany("LineItems")
@@ -322,7 +322,7 @@ namespace infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Shared.Money", "Price", b1 =>
+                    b.OwnsOne("Domain.Shared.ValueObjects.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("LineItemId")
                                 .HasColumnType("uniqueidentifier");
@@ -349,7 +349,7 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Orders.Order", b =>
                 {
-                    b.HasOne("Domain.Customers.CustomerCommand", null)
+                    b.HasOne("Domain.Customers.Customer", null)
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -358,7 +358,7 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Products.Product", b =>
                 {
-                    b.OwnsOne("Domain.Shared.Money", "Price", b1 =>
+                    b.OwnsOne("Domain.Shared.ValueObjects.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uniqueidentifier");

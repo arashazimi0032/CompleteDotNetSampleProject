@@ -1,13 +1,28 @@
-﻿namespace Domain.Primitive.Models;
+﻿using Domain.Primitive.Events;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
+namespace Domain.Primitive.Models;
+
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     where TId : ValueObject
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
+
     public TId Id { get; protected set; }
 
     protected Entity(TId id)
     {
         Id = id;
+    }
+
+    protected void Raise(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
     }
 
     public bool Equals(Entity<TId>? other)

@@ -1,16 +1,12 @@
-﻿using System.Security.Claims;
-using Application.Orders.Commands.Create;
+﻿using Application.Orders.Commands.Create;
 using Application.Orders.Commands.Delete;
 using Application.Orders.Commands.Update;
 using Application.Orders.Queries.Get;
 using Application.Orders.Queries.GetAll;
 using Domain.ApplicationUsers;
 using Domain.Exceptions;
-using Domain.IRepositories;
-using Domain.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

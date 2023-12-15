@@ -1,5 +1,6 @@
 ﻿using Domain.Customers.ValueObjects;
 using Domain.Orders.Entities;
+using Domain.Orders.Events;
 using Domain.Orders.ValueObjects;
 using Domain.Primitive.Models;
 using Domain.Products.ValueObjects;
@@ -20,7 +21,11 @@ public class Order : AggregateRoot<OrderId>
 
     public static Order Create(CustomerId customerId)
     {
-        return new Order(OrderId.CreateUnique(), customerId);
+        var order = new Order(OrderId.CreateUnique(), customerId);
+        
+        order.Raise(new OrderCreatedDomainEvent(order));
+
+        return order;
     }
 
     public void Update(IEnumerable<LineItem> lineItems)

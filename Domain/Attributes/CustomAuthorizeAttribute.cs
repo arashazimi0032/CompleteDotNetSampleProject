@@ -9,12 +9,16 @@ public sealed class CustomAuthorizeAttribute : AuthorizeAttribute
     public CustomAuthorizeAttribute() : base()
     { }
 
-    public CustomAuthorizeAttribute(Role role)
+    public CustomAuthorizeAttribute(Role role) : base()
     {
         Roles = role.ToString();
     }
-    public CustomAuthorizeAttribute(Role role, string? policy)
-        :base(policy: policy ?? string.Empty)
+
+    public CustomAuthorizeAttribute(string policy) : base(policy)
+    {
+    }
+    public CustomAuthorizeAttribute(Role role, string policy)
+        :base(policy)
     {
         Roles = role.ToString();
     }
