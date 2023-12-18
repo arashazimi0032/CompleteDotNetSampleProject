@@ -1,4 +1,5 @@
 using Application;
+using Application.Identity;
 using Carter;
 using Domain.ApplicationUsers;
 using infrastructure;
@@ -18,7 +19,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddUserManager<CustomUserManager<ApplicationUser>>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenWhitAuthorize();
