@@ -1,7 +1,6 @@
 ﻿using Domain.Orders.Entities;
 using Domain.Orders.ValueObjects;
 using Domain.Products;
-using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -84,7 +84,8 @@ public class ProductsController : ControllerBase
 
     // POST api/<ProductsController>
     [HttpPost]
-    [CustomAuthorize(Role.Admin)]
+    //[CustomAuthorize(Role.Admin)]
+    [CustomAuthorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Post(string name, Money price, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
