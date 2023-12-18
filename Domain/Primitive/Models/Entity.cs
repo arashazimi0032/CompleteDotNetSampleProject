@@ -2,7 +2,7 @@
 
 namespace Domain.Primitive.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents, IAuditableEntity
     where TId : ValueObject
 {
     private readonly List<IDomainEvent> _domainEvents = new();
@@ -14,6 +14,8 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     }
 
     public TId Id { get; protected set; }
+    public DateTime CreatedAtUtc { get; set; }
+    public DateTime? ModifiedAtUtc { get; set; }
 
     protected Entity(TId id)
     {

@@ -13,6 +13,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<PublishDomainEventsInterceptor>();
+        services.AddScoped<UpdateAuditableEntitiesInterceptor>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IEmailService, EmailService>();
 

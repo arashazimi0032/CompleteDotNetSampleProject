@@ -15,11 +15,14 @@ namespace infrastructure.Persistence;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+    private readonly UpdateAuditableEntitiesInterceptor _updateAuditableEntitiesInterceptor;
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        PublishDomainEventsInterceptor publishDomainEventsInterceptor) : base(options)
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+        UpdateAuditableEntitiesInterceptor updateAuditableEntitiesInterceptor) : base(options)
     {
         _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
+        _updateAuditableEntitiesInterceptor = updateAuditableEntitiesInterceptor;
     }
 
     public DbSet<Customer> Customers { get; set; }
@@ -38,7 +41,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(
+            _publishDomainEventsInterceptor, 
+            _updateAuditableEntitiesInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }
