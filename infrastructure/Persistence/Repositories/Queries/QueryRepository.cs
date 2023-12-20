@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.IRepositories.Queries;
+using Domain.IRepositories.Queries.Caches;
 using Domain.Primitive.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace infrastructure.Persistence.Repositories.Queries;
 
-public class QueryRepository<T, TId> : IQueryRepository<T, TId>
+public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepository<T, TId>
     where T : Entity<TId>
     where TId : ValueObject
 {
@@ -45,10 +46,10 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>
         return entity;
     }
 
-    public Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
     {
         var key = $"{nameof(T)}-{id}";
-        return _memoryCache.GetOrCreateAsync(
+        return await _memoryCache.GetOrCreateAsync(
             key,
             entry =>
             {
