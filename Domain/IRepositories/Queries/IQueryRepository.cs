@@ -13,4 +13,6 @@ public interface IQueryRepository<T, in TId>
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
     Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
+
+    Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default);
 }

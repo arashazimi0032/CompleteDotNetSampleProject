@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.IRepositories.Queries;
 using Domain.Primitive.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace infrastructure.Persistence.Repositories.Queries;
 
@@ -9,11 +10,13 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>
     where TId : ValueObject
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMemoryCache _memoryCache;
     internal DbSet<T> dbSet;
 
-    public QueryRepository(ApplicationDbContext context)
+    public QueryRepository(ApplicationDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
+        _memoryCache = memoryCache;
         dbSet = _context.Set<T>();
     }
 
@@ -40,5 +43,18 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>
 
         _context.Entry(entity!).State = EntityState.Detached;
         return entity;
+    }
+
+    public Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
+    {
+        var key = $"{nameof(T)}-{id}";
+        return _memoryCache.GetOrCreateAsync(
+            key,
+            entry =>
+            {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+
+                return GetByIdAsync(id, cancellationToken);
+            });
     }
 }

@@ -4,6 +4,7 @@ using Domain.IRepositories.UnitOfWorks;
 using infrastructure.Persistence.Repositories.Commands;
 using infrastructure.Persistence.Repositories.Queries;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace infrastructure.Persistence.Repositories.UnitOfWorks;
 
@@ -12,11 +13,12 @@ public sealed class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
     public ICommandUnitOfWork Commands { get; private set; }
     public IQueryUnitOfWork Queries { get; private set; }
-    public UnitOfWork(ApplicationDbContext context)
+
+    public UnitOfWork(ApplicationDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
         Commands = new CommandUnitOfWork(_context);
-        Queries = new QueryUnitOfWork(_context);
+        Queries = new QueryUnitOfWork(_context, memoryCache);
     }
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
