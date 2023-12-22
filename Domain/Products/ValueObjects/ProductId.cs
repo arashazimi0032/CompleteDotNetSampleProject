@@ -5,6 +5,12 @@ namespace Domain.Products.ValueObjects;
 public record ProductId : ValueObject
 {
     public Guid Value { get; set; }
+
+    private ProductId()
+    {
+
+    }
+
     private ProductId(Guid value)
     {
         Value = value;

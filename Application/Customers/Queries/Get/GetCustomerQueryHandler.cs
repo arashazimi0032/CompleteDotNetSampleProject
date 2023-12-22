@@ -18,7 +18,7 @@ internal sealed class GetCustomerQueryHandler : IRequestHandler<GetCustomerQuery
 
     public async Task<CustomerResponse> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
     {
-        var queryable = await _unitOfWork.Queries.Customer.GetQueryableAsync();
+        var queryable = await _unitOfWork.Queries.Customer.GetQueryableAsNoTrackAsync();
 
         var response = await queryable
             .Where(c => c.Id == CustomerId.Create(request.Id))

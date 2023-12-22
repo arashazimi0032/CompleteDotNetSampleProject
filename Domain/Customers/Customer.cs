@@ -5,6 +5,10 @@ namespace Domain.Customers;
 
 public class Customer : Entity<CustomerId>
 {
+    private Customer()
+    {
+        
+    }
     private Customer(CustomerId id, string name, string email) : base(id)
     {
         Name = name;

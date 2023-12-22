@@ -15,7 +15,7 @@ internal sealed class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustom
 
     public async Task<IEnumerable<CustomerResponse>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        var customers = await _unitOfWork.Queries.Customer.GetAllAsync(cancellationToken);
+        var customers = await _unitOfWork.Queries.Customer.GetAllAsNoTrackAsync(cancellationToken);
 
         return customers
             .Select(c => new CustomerResponse(c.Id.Value, c.Name, c.Email))

@@ -19,7 +19,9 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
 
     public async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
-        var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsAsync(OrderId.Create(command.OrderId), cancellationToken);
+        //var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsAsync(OrderId.Create(command.OrderId), cancellationToken);
+        //var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsMemoryCacheAsync(OrderId.Create(command.OrderId), cancellationToken);
+        var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsRedisCacheAsync(OrderId.Create(command.OrderId), cancellationToken);
 
         var lineItems = new List<LineItem>();
 

@@ -23,7 +23,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
         foreach (var productId in request.ProductId)
         {
-            var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(productId), cancellationToken);
+            var product = await _unitOfWork.Queries.Product.GetByIdAsNoTrackAsync(ProductId.Create(productId), cancellationToken);
 
             if (product is null)
             {

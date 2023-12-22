@@ -6,6 +6,10 @@ namespace Domain.Products;
 
 public class Product : Entity<ProductId>
 {
+    private Product()
+    {
+
+    }
     private Product(ProductId id) : base(id)
     {
 

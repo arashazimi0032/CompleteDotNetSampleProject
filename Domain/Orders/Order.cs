@@ -10,6 +10,11 @@ namespace Domain.Orders;
 
 public class Order : AggregateRoot<OrderId>
 {
+    private Order()
+    {
+
+    }
+
     private Order(OrderId id, CustomerId customerId) : base(id)
     {
         CustomerId = customerId;

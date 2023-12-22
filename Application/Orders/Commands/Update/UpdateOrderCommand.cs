@@ -1,5 +1,4 @@
-﻿using Domain.Orders;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Orders.Commands.Update;
 

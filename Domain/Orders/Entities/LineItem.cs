@@ -7,6 +7,10 @@ namespace Domain.Orders.Entities;
 
 public class LineItem : Entity<LineItemId>
 {
+    private LineItem()
+    {
+        
+    }
     private LineItem(LineItemId id) : base(id)
     {
 

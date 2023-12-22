@@ -14,7 +14,7 @@ public sealed class GetAllProductsService : IGetAllProductsService
 
     public async Task<IEnumerable<ProductResponse>> GetAllProducts(CancellationToken cancellationToken = default)
     {
-        var products = await _unitOfWork.Queries.Product.GetAllAsync(cancellationToken);
+        var products = await _unitOfWork.Queries.Product.GetAllAsNoTrackAsync(cancellationToken);
 
         return products
             .Select(p => new ProductResponse(p.Id.Value, p.Name, p.Price))

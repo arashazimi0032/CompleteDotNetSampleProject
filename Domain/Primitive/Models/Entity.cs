@@ -17,6 +17,11 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents, I
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
 
+    protected Entity()
+    {
+
+    }
+
     protected Entity(TId id)
     {
         Id = id;

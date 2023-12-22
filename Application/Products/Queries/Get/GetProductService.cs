@@ -17,7 +17,8 @@ public sealed class GetProductService : IGetProductService
     public async Task<ProductResponse> GetProduct(Guid id, CancellationToken cancellationToken = default)
     {
 
-        var product = await _unitOfWork.Queries.Product.GetByIdFromMemoryCacheAsync(ProductId.Create(id), cancellationToken);
+        //var product = await _unitOfWork.Queries.Product.GetByIdFromMemoryCacheAsNoTrackAsync(ProductId.Create(id), cancellationToken);
+        var product = await _unitOfWork.Queries.Product.GetByIdFromRedisCacheAsNoTrackAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {

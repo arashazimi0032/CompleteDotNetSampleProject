@@ -46,7 +46,7 @@ internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserComma
                     };
                 }
                 
-                var customer = await _unitOfWork.Queries.Customer.GetByIdAsync(user.CustomerId, cancellationToken);
+                var customer = await _unitOfWork.Queries.Customer.GetByIdAsNoTrackAsync(user.CustomerId, cancellationToken);
                 if (customer is not null)
                 {
                     _unitOfWork.Commands.Customer.Remove(customer);

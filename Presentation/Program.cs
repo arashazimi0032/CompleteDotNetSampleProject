@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGenWhitAuthorize();
 builder.Services
     .AddApplication()
     .AddInfrastructure()
-    .AddPresentation();
+    .AddPresentation(builder.Configuration);
 
 var app = builder.Build();
 

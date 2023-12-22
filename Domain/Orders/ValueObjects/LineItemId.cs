@@ -5,6 +5,12 @@ namespace Domain.Orders.ValueObjects;
 public record LineItemId : ValueObject
 {
     public Guid Value { get; set; }
+
+    private LineItemId()
+    {
+
+    }
+
     private LineItemId(Guid value)
     {
         Value = value;

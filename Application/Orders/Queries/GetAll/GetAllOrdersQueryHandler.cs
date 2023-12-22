@@ -15,7 +15,7 @@ internal sealed class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQue
 
     public async Task<IEnumerable<OrderResponse>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
-        var orders = await  _unitOfWork.Queries.Order.GetAllWithLineItemsAsync(cancellationToken);
+        var orders = await  _unitOfWork.Queries.Order.GetAllWithLineItemsAsNoTrackAsync(cancellationToken);
 
         var response = orders
             .Select(o => new OrderResponse(o!.Id.Value, o.CustomerId.Value, o.LineItems))

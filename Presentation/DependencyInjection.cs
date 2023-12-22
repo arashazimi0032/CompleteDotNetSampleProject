@@ -8,8 +8,14 @@ namespace Presentation;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection service)
+    public static IServiceCollection AddPresentation(this IServiceCollection service, IConfiguration configuration)
     {
+        service.AddStackExchangeRedisCache(redisOption =>
+        {
+            var connection = configuration.GetConnectionString("Redis");
+            redisOption.Configuration = connection;
+        });
+
         service.AddCarter();
 
         service.AddAuthentication(options =>
