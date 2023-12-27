@@ -52,10 +52,10 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
         _unitOfWork.Commands.Order.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // TODO: redis update must convert to a separate service
-        await _distributedCache.SetStringAsync(
-            key,
-            JsonConvert.SerializeObject(order),
-            cancellationToken);
+        //// TODO: redis update must convert to a separate service
+        //await _distributedCache.SetStringAsync(
+        //    key,
+        //    JsonConvert.SerializeObject(order),
+        //    cancellationToken);
     }
 }

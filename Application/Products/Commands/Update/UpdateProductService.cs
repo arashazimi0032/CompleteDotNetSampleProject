@@ -16,7 +16,7 @@ public sealed class UpdateProductService : IUpdateProductService
 
     public async Task UpdateProduct(Guid id, string name, Money price, CancellationToken cancellationToken = default)
     {
-        var product = await _unitOfWork.Queries.Product.GetByIdAsNoTrackAsync(ProductId.Create(id), cancellationToken);
+        var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {

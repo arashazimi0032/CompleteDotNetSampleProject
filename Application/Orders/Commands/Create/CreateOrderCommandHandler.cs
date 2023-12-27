@@ -32,7 +32,6 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
             var price = new Money(product.Price.Currency, product.Price.Amount);
             order.Add(ProductId.Create(productId), price);
-            
         }
 
         await _unitOfWork.Commands.Order.AddAsync(order, cancellationToken);
