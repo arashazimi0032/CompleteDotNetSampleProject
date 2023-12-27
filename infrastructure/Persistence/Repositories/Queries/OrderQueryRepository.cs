@@ -1,5 +1,4 @@
 ﻿using Domain.IRepositories.Queries;
-using Domain.IRepositories.Queries.Caches;
 using Domain.Orders;
 using Domain.Orders.ValueObjects;
 using infrastructure.Other;
@@ -59,20 +58,6 @@ public sealed class OrderQueryRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Order?> GetByIdWithLineItemsMemoryCacheAsNoTrackAsync(OrderId id, CancellationToken cancellationToken = default)
-    {
-        var key = $"Order-{id}";
-
-        return await _memoryCache.GetOrCreateAsync(
-            key,
-            entry =>
-            {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-
-                return GetByIdWithLineItemsAsNoTrackAsync(id, cancellationToken);
-            });
-    }
-
     public async Task<Order?> GetByIdWithLineItemsMemoryCacheAsync(OrderId id, CancellationToken cancellationToken = default)
     {
         var key = $"Order-{id}";
@@ -83,15 +68,13 @@ public sealed class OrderQueryRepository
             {
                 entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
 
-                return GetByIdWithLineItemsAsync(id, cancellationToken);
+                return GetByIdWithLineItemsAsNoTrackAsync(id, cancellationToken);
             });
-
-        if (order is not null) _context.Attach(order);
 
         return order;
     }
 
-    public async Task<Order?> GetByIdWithLineItemsRedisCacheAsNoTrackAsync(OrderId id, CancellationToken cancellationToken = default)
+    public async Task<Order?> GetByIdWithLineItemsRedisCacheAsync(OrderId id, CancellationToken cancellationToken = default)
     {
         var key = $"Order-{id}";
 
@@ -119,40 +102,6 @@ public sealed class OrderQueryRepository
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 ContractResolver = new PrivateResolver()
             });
-
-        return order;
-    }
-
-    public async Task<Order?> GetByIdWithLineItemsRedisCacheAsync(OrderId id, CancellationToken cancellationToken = default)
-    {
-        var key = $"Order-{id}";
-
-        var orderCached = await _distributedCache.GetStringAsync(key, cancellationToken);
-
-        Order? order;
-        if (string.IsNullOrEmpty(orderCached))
-        {
-            order = await GetByIdWithLineItemsAsync(id, cancellationToken);
-
-            if (order is null) return order;
-
-            await _distributedCache.SetStringAsync(
-                key,
-                JsonConvert.SerializeObject(order),
-                cancellationToken);
-
-            return order;
-        }
-
-        order = JsonConvert.DeserializeObject<Order>(
-            orderCached,
-            new JsonSerializerSettings
-            {
-                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                ContractResolver = new PrivateResolver()
-            });
-
-        if (order is not null) _context.Attach(order);
 
         return order;
     }

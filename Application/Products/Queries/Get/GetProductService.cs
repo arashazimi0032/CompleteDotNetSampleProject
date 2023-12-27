@@ -18,7 +18,7 @@ public sealed class GetProductService : IGetProductService
     {
 
         //var product = await _unitOfWork.Queries.Product.GetByIdFromMemoryCacheAsNoTrackAsync(ProductId.Create(id), cancellationToken);
-        var product = await _unitOfWork.Queries.Product.GetByIdFromRedisCacheAsNoTrackAsync(ProductId.Create(id), cancellationToken);
+        var product = await _unitOfWork.Queries.Product.GetByIdFromRedisCacheAsync(ProductId.Create(id), cancellationToken);
 
         if (product is null)
         {

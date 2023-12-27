@@ -24,6 +24,11 @@ public class Order : AggregateRoot<OrderId>
     private readonly HashSet<LineItem> _lineItems = new();
     public IReadOnlySet<LineItem> LineItems => _lineItems.ToHashSet();
 
+    public static Order Create(OrderId id, CustomerId customerId)
+    {
+        return new Order(id, customerId);
+    }
+
     public static Order Create(CustomerId customerId)
     {
         var order = new Order(OrderId.CreateUnique(), customerId);
@@ -39,13 +44,24 @@ public class Order : AggregateRoot<OrderId>
 
         foreach (var lineItem in lineItems)
         {
-            Add(lineItem.ProductId, lineItem.Price);
+            Add(lineItem.Id, lineItem.ProductId, lineItem.Price);
         }
     }
 
     public void Add(ProductId productId, Money price)
     {
         var lineItem = LineItem.Create(
+            Id, 
+            productId,
+            price);
+        
+        _lineItems.Add(lineItem);
+    }
+
+    public void Add(LineItemId lineItemId, ProductId productId, Money price)
+    {
+        var lineItem = LineItem.Create(
+            lineItemId,
             Id, 
             productId,
             price);

@@ -74,7 +74,7 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
             cancellationToken: cancellationToken);
     }
 
-    public async Task<T?> GetByIdFromMemoryCacheAsNoTrackAsync(TId id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
     {
         var key = $"{nameof(T)}-{id}";
         return await _memoryCache.GetOrCreateAsync(
@@ -87,24 +87,7 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
             });
     }
 
-    public async Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
-    {
-        var key = $"{nameof(T)}-{id}";
-        var entity = await _memoryCache.GetOrCreateAsync(
-            key,
-            entry =>
-            {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-
-                return GetByIdAsync(id, cancellationToken);
-            });
-
-        if (entity is not null) _context.Attach(entity);
-        
-        return entity;
-    }
-
-    public async Task<T?> GetByIdFromRedisCacheAsNoTrackAsync(TId id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdFromRedisCacheAsync(TId id, CancellationToken cancellationToken = default)
     {
         var key = $"{nameof(T)}-{id}";
 
@@ -132,40 +115,6 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 ContractResolver = new PrivateResolver()
             });
-
-        return entity;
-    }
-
-    public async Task<T?> GetByIdFromRedisCacheAsync(TId id, CancellationToken cancellationToken = default)
-    {
-        var key = $"{nameof(T)}-{id}";
-
-        var cachedEntity = await _distributedCache.GetStringAsync(key, cancellationToken);
-
-        T? entity;
-        if (string.IsNullOrEmpty(cachedEntity))
-        {
-            entity = await GetByIdAsync(id, cancellationToken);
-
-            if (entity is null) return entity;
-
-            await _distributedCache.SetStringAsync(
-                key,
-                JsonConvert.SerializeObject(entity),
-                cancellationToken);
-
-            return entity;
-        }
-
-        entity = JsonConvert.DeserializeObject<T>(
-            cachedEntity,
-            new JsonSerializerSettings
-            {
-                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                ContractResolver = new PrivateResolver()
-            });
-
-        if (entity is not null) _context.Attach(entity);
 
         return entity;
     }

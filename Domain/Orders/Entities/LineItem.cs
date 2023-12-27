@@ -25,6 +25,10 @@ public class LineItem : Entity<LineItemId>
     {
         return new LineItem(LineItemId.CreateUnique(), orderId, productId, price);
     }
+    public static LineItem Create(LineItemId lineItemId, OrderId orderId, ProductId productId, Money price)
+    {
+        return new LineItem(lineItemId, orderId, productId, price);
+    }
     public OrderId OrderId { get; private set; }
     public ProductId ProductId { get; private set; }
     public Money Price { get; private set; }
