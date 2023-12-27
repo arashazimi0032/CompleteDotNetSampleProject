@@ -18,17 +18,11 @@ internal sealed class GetCustomerQueryHandler : IRequestHandler<GetCustomerQuery
 
     public async Task<CustomerResponse> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
     {
-        var queryable = await _unitOfWork.Queries.Customer.GetQueryableAsNoTrackAsync();
+        var customer = await _unitOfWork.Queries.Customer.GetByIdFromMemoryCacheAsync(CustomerId.Create(request.Id), cancellationToken);
 
-        var response = await queryable
-            .Where(c => c.Id == CustomerId.Create(request.Id))
-            .Select(c => new CustomerResponse(c.Id.Value, c.Name, c.Email))
-            .FirstOrDefaultAsync(cancellationToken);
+        if (customer is null) throw new CustomerNotFoundException(request.Id);
 
-        if (response is null)
-        {
-            throw new CustomerNotFoundException(request.Id);
-        }
+        var response = new CustomerResponse(customer.Id.Value, customer.Name, customer.Email);
 
         return response;
     }

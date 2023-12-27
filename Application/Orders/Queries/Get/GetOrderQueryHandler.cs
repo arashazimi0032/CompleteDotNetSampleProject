@@ -18,15 +18,13 @@ internal sealed class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, Orde
 
     public async Task<OrderResponse> Handle(GetOrderQuery request, CancellationToken cancellationToken)
     {
-        var response = await (await _unitOfWork.Queries.Order.GetQueryableAsNoTrackAsync())
-            .Where(o => o.Id == OrderId.Create(request.OrderId))
-            .Select(o => new OrderResponse(o.Id.Value, o.CustomerId!.Value, o.LineItems))
-            .FirstOrDefaultAsync(cancellationToken);
+        var orderId = OrderId.Create(request.OrderId);
 
-        if (response is null)
-        {
-            throw new OrderNotFoundException(request.OrderId);
-        }
+        var order = await _unitOfWork.Queries.Order.GetByIdWithLineItemsMemoryCacheAsync(orderId, cancellationToken);
+
+        if (order is null) throw new OrderNotFoundException(request.OrderId);
+
+        var response = new OrderResponse(order.Id.Value, order.CustomerId.Value, order.LineItems);
 
         return response;
     }

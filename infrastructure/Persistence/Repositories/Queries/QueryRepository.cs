@@ -76,12 +76,12 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
 
     public async Task<T?> GetByIdFromMemoryCacheAsync(TId id, CancellationToken cancellationToken = default)
     {
-        var key = $"{nameof(T)}-{id}";
+        var key = $"{typeof(T).Name}-{id}";
         return await _memoryCache.GetOrCreateAsync(
             key,
             entry =>
             {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(20));
 
                 return GetByIdAsNoTrackAsync(id, cancellationToken);
             });
@@ -89,7 +89,7 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
 
     public async Task<T?> GetByIdFromRedisCacheAsync(TId id, CancellationToken cancellationToken = default)
     {
-        var key = $"{nameof(T)}-{id}";
+        var key = $"{typeof(T).Name}-{id}";
 
         var cachedEntity = await _distributedCache.GetStringAsync(key, cancellationToken);
 

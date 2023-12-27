@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.ApplicationUsers.UpdateUser;
 
@@ -11,13 +12,16 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMemoryCache _memoryCache;
 
     public UpdateUserCommandHandler(
         UserManager<ApplicationUser> userManager,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IMemoryCache memoryCache)
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _memoryCache = memoryCache;
     }
 
     public async Task<UserResponse> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
@@ -44,8 +48,10 @@ internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserComma
             {
                 if (customer is not null)
                 {
+                    var customerKey = $"Customer-{customer.Id}";
                     _unitOfWork.Commands.Customer.Update(customer);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
+                    _memoryCache.Remove(customerKey);
                 }
 
                 var userResponse = await _userManager.UpdateAsync(user);

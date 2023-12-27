@@ -66,7 +66,7 @@ public sealed class OrderQueryRepository
             key,
             entry =>
             {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(20));
 
                 return GetByIdWithLineItemsAsNoTrackAsync(id, cancellationToken);
             });
