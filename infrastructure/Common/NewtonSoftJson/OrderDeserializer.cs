@@ -1,11 +1,11 @@
 ﻿using Domain.Customers.ValueObjects;
-using Domain.Orders.Entities;
 using Domain.Orders;
+using Domain.Orders.Entities;
 using Domain.Orders.ValueObjects;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace infrastructure.Other;
+namespace infrastructure.Common.NewtonSoftJson;
 
 public class OrderDeserializer : JsonConverter<Order>
 {

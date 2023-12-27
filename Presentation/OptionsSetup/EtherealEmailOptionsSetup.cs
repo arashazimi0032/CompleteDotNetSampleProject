@@ -1,4 +1,4 @@
-﻿using Application.ConfigOptions;
+﻿using infrastructure.Services.Email;
 using Microsoft.Extensions.Options;
 
 namespace Presentation.OptionsSetup;

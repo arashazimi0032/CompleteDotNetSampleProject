@@ -1,5 +1,4 @@
 ﻿using Application.Abstractions.Email;
-using Application.ConfigOptions;
 using MailKit.Security;
 using MimeKit;
 using MailKit.Net.Smtp;

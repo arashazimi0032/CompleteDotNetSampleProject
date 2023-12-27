@@ -2,7 +2,7 @@
 using Domain.IRepositories.Queries;
 using Domain.IRepositories.Queries.Caches;
 using Domain.Primitive.Models;
-using infrastructure.Other;
+using infrastructure.Common.NewtonSoftJson;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;

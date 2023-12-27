@@ -74,8 +74,6 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
                 await _unitOfWork.Commands.Customer.AddAsync(customer, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                // TODO : the code for creating customer and add it to database is repeated in CreateCustomerCommandHandler. It should be convert to a service
-
                 var result = await _userManager.CreateAsync(applicationUser, request.Password);
 
                 if (!result.Succeeded)

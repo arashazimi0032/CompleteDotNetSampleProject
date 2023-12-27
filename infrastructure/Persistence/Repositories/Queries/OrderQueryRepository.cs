@@ -1,7 +1,7 @@
 ﻿using Domain.IRepositories.Queries;
 using Domain.Orders;
 using Domain.Orders.ValueObjects;
-using infrastructure.Other;
+using infrastructure.Common.NewtonSoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace infrastructure.Other;
+namespace infrastructure.Common.NewtonSoftJson;
 
 public class PrivateResolver : DefaultContractResolver
 {

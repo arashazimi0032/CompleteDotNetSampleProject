@@ -1,4 +1,4 @@
-﻿namespace Application.ConfigOptions;
+﻿namespace infrastructure.Services.Email;
 
 public class EtherealEmailOptions
 {

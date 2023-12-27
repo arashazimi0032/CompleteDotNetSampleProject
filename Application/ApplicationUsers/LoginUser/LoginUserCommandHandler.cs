@@ -1,26 +1,23 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Application.Abstractions.Authentication;
 using Application.ApplicationUsers.Share;
-using Application.ConfigOptions;
 using Domain.ApplicationUsers;
-using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.ApplicationUsers.LoginUser;
 
 internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserResponse>
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly JwtOptions _jwtOptions;
+    private readonly IJwtProviderService _jwtProviderService;
 
-    public LoginUserCommandHandler(UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions)
+    public LoginUserCommandHandler(
+        UserManager<ApplicationUser> userManager,
+        IJwtProviderService jwtProviderService)
     {
         _userManager = userManager;
-        _jwtOptions = jwtOptions.Value;
+        _jwtProviderService = jwtProviderService;
     }
 
     public async Task<UserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
@@ -47,31 +44,13 @@ internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand
             };
         }
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Email, request.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim("CustomerId", user.CustomerId.ToString() ?? string.Empty),
-            new Claim(ClaimTypes.Role, (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? Role.Customer.ToString())
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
-
-        var token = new JwtSecurityToken(
-            issuer: _jwtOptions.Issuer,
-            audience: _jwtOptions.Audience,
-            claims: claims,
-            expires: DateTime.Now.AddDays(1),
-            signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-
-        var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
-
+        var tokenResponse = await _jwtProviderService.GenerateToken(user);
 
         return new UserResponse
         {
-            Message = tokenAsString,
+            Message = tokenResponse.TokenAsString,
             IsSuccess = true,
-            ExpireDate = token.ValidTo
+            ExpireDate = tokenResponse.Token.ValidTo
         };
     }
 }
