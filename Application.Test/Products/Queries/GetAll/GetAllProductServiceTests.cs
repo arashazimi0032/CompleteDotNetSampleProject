@@ -40,6 +40,7 @@ public class GetAllProductServiceTests
         var response = await getAllProductService.GetAllProducts(cancellationToken);
 
         // Assert
+        response.Should().NotBeNull();
         response.Should().BeEquivalentTo(productResponse);
 
     }
