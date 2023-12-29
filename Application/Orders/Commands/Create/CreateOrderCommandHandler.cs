@@ -5,10 +5,10 @@ using Domain.Orders;
 using Domain.Products.ValueObjects;
 using Domain.Shared.ValueObjects;
 using MediatR;
-
+    
 namespace Application.Orders.Commands.Create;
 
-internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
+internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -17,7 +17,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var order = Order.Create(CustomerId.Create(request.CustomerId));
 
@@ -36,5 +36,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
         await _unitOfWork.Commands.Order.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return order.Id.Value;
     }
 }

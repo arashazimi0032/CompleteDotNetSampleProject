@@ -46,9 +46,9 @@ namespace Presentation.Controllers
 
                 var command = new CreateOrderCommand(currentUser.CustomerId!.Value, request.ProductId);
 
-                await _mediator.Send(command, cancellationToken);
+                var orderId = await _mediator.Send(command, cancellationToken);
 
-                return Ok();
+                return Ok(orderId);
             }
             catch (Exception e)
             {

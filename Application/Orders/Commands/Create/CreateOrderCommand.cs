@@ -1,7 +1,5 @@
-﻿using Domain.Customers;
-using Domain.Products;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Orders.Commands.Create;
 
-public record CreateOrderCommand(Guid CustomerId, List<Guid> ProductId) : IRequest;
+public record CreateOrderCommand(Guid CustomerId, List<Guid> ProductId) : IRequest<Guid>;
