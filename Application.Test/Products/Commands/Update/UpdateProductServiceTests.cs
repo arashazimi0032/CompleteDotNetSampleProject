@@ -117,4 +117,38 @@ public class UpdateProductServiceTests
             x => x.SaveChangesAsync(cancellationToken),
             Times.Never);
     }
+
+    [Fact]
+    public async Task Service_Should_ReturnGuidId_WhenProductIsNotNull()
+    {
+        // Arrange
+        var guidValue = Guid.NewGuid();
+
+        var updateProductService = new UpdateProductService(_unitOfWorkMock.Object, _memoryCacheMock.Object);
+
+        var productId = ProductId.Create(guidValue);
+        var price = new Money("USD", 100m);
+        var product = Product.Create("New Product", price);
+        var cancellationToken = It.IsAny<CancellationToken>();
+
+        _unitOfWorkMock.Setup(
+                x => x.Queries.Product.GetByIdAsync(
+                    productId,
+                    cancellationToken))
+            .ReturnsAsync(product);
+
+        _unitOfWorkMock.SetupGet(x => x.Commands).Returns(_commandUnitOfWorkMock.Object);
+        _unitOfWorkMock.SetupGet(x => x.Commands.Product).Returns(_productCommandRepositoryMock.Object);
+
+        // Act
+        var updatedProductId = await updateProductService.UpdateProduct(
+            productId.Value,
+            "product Name Updated",
+            price,
+            cancellationToken);
+
+        // Assert
+        updatedProductId.Should().NotBeEmpty();
+        updatedProductId.GetType().Should().Be(typeof(Guid));
+    }
 }

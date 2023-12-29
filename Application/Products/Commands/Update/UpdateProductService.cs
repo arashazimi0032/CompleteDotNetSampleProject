@@ -17,7 +17,7 @@ public sealed class UpdateProductService : IUpdateProductService
         _memoryCache = memoryCache;
     }
 
-    public async Task UpdateProduct(Guid id, string name, Money price, CancellationToken cancellationToken = default)
+    public async Task<Guid> UpdateProduct(Guid id, string name, Money price, CancellationToken cancellationToken = default)
     {
         var productId = ProductId.Create(id);
         var key = $"Product-{productId}";
@@ -35,5 +35,7 @@ public sealed class UpdateProductService : IUpdateProductService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         _memoryCache.Remove(key);
+
+        return productId.Value;
     }
 }

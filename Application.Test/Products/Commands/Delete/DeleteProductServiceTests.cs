@@ -95,4 +95,32 @@ public class DeleteProductServiceTests
         //Assert
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(cancellationToken), Times.Never);
     }
+
+    [Fact]
+    public async Task Service_Should_ReturnGuidId_WhenProductIsNotNull()
+    {
+        // Arrange
+        var deleteProductService = new DeleteProductService(_unitOfWorkMock.Object);
+        var productId = ProductId.CreateUnique();
+        var cancellationToken = It.IsAny<CancellationToken>();
+        var price = new Money("USD", 100m);
+        var product = Product.Create("Product", price);
+
+        _unitOfWorkMock.Setup(
+                x => x.Queries.Product.GetByIdAsync(
+                    productId,
+                    cancellationToken))
+            .ReturnsAsync(product);
+
+        _unitOfWorkMock.SetupGet(x => x.Commands).Returns(_commandUnitOfWorkMock.Object);
+        _unitOfWorkMock.SetupGet(x => x.Commands.Product).Returns(_productCommandRepositoryMock.Object);
+
+        //Act
+        var deletedProductId = await deleteProductService.DeleteProduct(productId.Value, cancellationToken);
+
+
+        //Assert
+        deletedProductId.Should().NotBeEmpty();
+        deletedProductId.GetType().Should().Be(typeof(Guid));
+    }
 }

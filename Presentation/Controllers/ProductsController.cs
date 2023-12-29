@@ -95,9 +95,9 @@ public class ProductsController : ControllerBase
 
         try
         {
-            await _createProductService.CreateProduct(name, price, cancellationToken);
+            var productId = await _createProductService.CreateProduct(name, price, cancellationToken);
             
-            return Ok();
+            return Ok(productId);
         }
         catch (Exception e)
         {

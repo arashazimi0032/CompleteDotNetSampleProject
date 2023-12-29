@@ -13,7 +13,7 @@ public sealed class CreateProductService : ICreateProductService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task CreateProduct(string name, Money price, CancellationToken cancellationToken = default)
+    public async Task<Guid> CreateProduct(string name, Money price, CancellationToken cancellationToken = default)
     {
         var product = Product.Create(
             name, 
@@ -22,5 +22,7 @@ public sealed class CreateProductService : ICreateProductService
         await _unitOfWork.Commands.Product.AddAsync(product, cancellationToken);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return product.Id.Value;
     }
 }

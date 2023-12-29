@@ -13,7 +13,7 @@ public sealed class DeleteProductService : IDeleteProductService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task DeleteProduct(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Guid> DeleteProduct(Guid id, CancellationToken cancellationToken = default)
     {
         var product = await _unitOfWork.Queries.Product.GetByIdAsync(ProductId.Create(id), cancellationToken);
 
@@ -25,5 +25,7 @@ public sealed class DeleteProductService : IDeleteProductService
         _unitOfWork.Commands.Product.Remove(product);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return product.Id.Value;
     }
 }
