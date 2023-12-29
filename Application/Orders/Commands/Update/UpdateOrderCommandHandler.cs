@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Orders.Commands.Update;
 
-internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
+internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMemoryCache _memoryCache;
@@ -20,7 +20,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
         _memoryCache = memoryCache;
     }
 
-    public async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
         var orderId = OrderId.Create(command.OrderId);
 
@@ -53,5 +53,7 @@ internal sealed class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCom
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _memoryCache.Remove(orderKey);
+
+        return order.Id.Value;
     }
 }
