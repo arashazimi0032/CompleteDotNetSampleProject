@@ -1,6 +1,5 @@
-﻿using Domain.Orders;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Orders.Commands.Delete;
 
-public record DeleteOrderCommand(Guid OrderId) : IRequest;
+public record DeleteOrderCommand(Guid OrderId) : IRequest<Guid>;

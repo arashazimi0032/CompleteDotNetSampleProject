@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Orders.Commands.Delete;
 
-internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
+internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,7 +14,7 @@ internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {
         var order = await _unitOfWork.Queries.Order.GetByIdAsync(OrderId.Create(request.OrderId), cancellationToken);
 
@@ -25,5 +25,7 @@ internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 
         _unitOfWork.Commands.Order.Remove(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return order.Id.Value;
     }
 }
