@@ -26,7 +26,11 @@ public class Order : AggregateRoot<OrderId>
 
     public static Order Create(OrderId id, CustomerId customerId)
     {
-        return new Order(id, customerId);
+        var order = new Order(id, customerId);
+
+        order.Raise(new OrderCreatedDomainEvent(order));
+
+        return order;
     }
 
     public static Order Create(CustomerId customerId)
