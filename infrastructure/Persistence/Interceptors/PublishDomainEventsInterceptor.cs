@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace infrastructure.Persistence.Interceptors;
 
-public class PublishDomainEventsInterceptor : SaveChangesInterceptor
+public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {
     private readonly IPublisher _publisher;
 
