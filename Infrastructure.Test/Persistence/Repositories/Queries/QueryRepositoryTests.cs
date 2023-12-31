@@ -13,13 +13,13 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Query.Internal;
-using Moq;
 
 namespace Infrastructure.Test.Persistence.Repositories.Queries;
 
 public class QueryRepositoryTests
 {
     private readonly IQueryRepository<Product, ProductId> _queryRepository;
+    private readonly Mock<IQueryRepository<Product, ProductId>> _queryRepositoryMock;
     private readonly ICacheRepository<Product, ProductId> _cacheRepository;
     private readonly ICommandRepository<Product, ProductId> _commandRepository;
     private readonly Mock<IDistributedCache> _distributedCacheMock;
@@ -36,6 +36,7 @@ public class QueryRepositoryTests
             context, 
             memoryCache, 
             _distributedCacheMock.Object);
+        _queryRepositoryMock = new();
 
         _cacheRepository = new QueryRepository<Product, ProductId>(
             context, 
@@ -276,7 +277,28 @@ public class QueryRepositoryTests
         // Assert
         retrievedProduct.Should().NotBeNull();
         retrievedProduct.Should().BeEquivalentTo(product);
+    }
 
+    [Fact]
+    public async Task GetByIdAsync_Should_ReturnProduct_MockExample()
+    {
+        // Arrange
+        var product = Product.Create("Product", new Money("USD", 100m));
+        var cancellationToken = It.IsAny<CancellationToken>();
+        await _commandRepository.AddAsync(product, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        _queryRepositoryMock.Setup(x => x.GetByIdAsync(
+                product.Id,
+                cancellationToken))
+            .ReturnsAsync(product);
+
+        // Act
+        var retrievedProduct = await _queryRepositoryMock.Object.GetByIdAsync(product.Id, cancellationToken);
+
+        // Assert
+        retrievedProduct.Should().NotBeNull();
+        retrievedProduct.Should().BeEquivalentTo(product);
     }
 
     [Fact]
