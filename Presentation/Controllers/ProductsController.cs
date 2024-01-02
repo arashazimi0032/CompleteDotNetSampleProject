@@ -117,9 +117,9 @@ public class ProductsController : ControllerBase
 
         try
         {
-            await _updateProductService.UpdateProduct(id, request.Name, request.Price, cancellationToken);
+            var productId = await _updateProductService.UpdateProduct(id, request.Name, request.Price, cancellationToken);
 
-            return Ok();
+            return Ok(productId);
         }
         catch (ProductNotFoundException e)
         {
@@ -139,9 +139,9 @@ public class ProductsController : ControllerBase
 
         try
         {
-            await _deleteProductService.DeleteProduct(id, cancellationToken);
+            var productId = await _deleteProductService.DeleteProduct(id, cancellationToken);
 
-            return Ok();
+            return Ok(productId);
         }
         catch (ProductNotFoundException e)
         {
