@@ -27,8 +27,8 @@ public class AuthenticationControllerTests
         {
             UserName = "UserName",
             Email = "email@gmail.com",
-            Password = "@Arash003254",
-            ConfirmPassword = "@Arash003254",
+            Password = "@Password1234",
+            ConfirmPassword = "@Password1234",
             Role = "Admin"
         };
 
@@ -59,8 +59,8 @@ public class AuthenticationControllerTests
         {
             UserName = "UserName",
             Email = "email@gmail.com",
-            Password = "@Arash003254",
-            ConfirmPassword = "@Arash003254",
+            Password = "@Password1234",
+            ConfirmPassword = "@Password1234",
             Role = "Admin",
         };
 
@@ -91,8 +91,8 @@ public class AuthenticationControllerTests
         {
             UserName = "UserName",
             Email = "email@gmail.com",
-            Password = "@Arash003254",
-            ConfirmPassword = "@Arash003254",
+            Password = "@Password1234",
+            ConfirmPassword = "@Password1234",
             Role = "Admin",
         };
 
@@ -118,8 +118,8 @@ public class AuthenticationControllerTests
         {
             UserName = "UserName",
             Email = "email@gmail.com",
-            Password = "@Arash003254",
-            ConfirmPassword = "@Arash003254",
+            Password = "@Password1234",
+            ConfirmPassword = "@Password1234",
             Role = "Admin",
         };
 

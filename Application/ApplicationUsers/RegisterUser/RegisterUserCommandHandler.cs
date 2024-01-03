@@ -4,14 +4,10 @@ using Application.ApplicationUsers.Share;
 using Domain.ApplicationUsers;
 using Domain.Customers;
 using Domain.Enums;
-using Domain.IRepositories;
-using Domain.IRepositories.Queries;
 using Domain.IRepositories.UnitOfWorks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.ApplicationUsers.RegisterUser;
