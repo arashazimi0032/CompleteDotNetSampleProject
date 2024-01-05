@@ -63,6 +63,8 @@ public class QueryRepository<T, TId> : IQueryRepository<T, TId>, ICacheRepositor
     {
         var entity = await GetByIdAsync(id, cancellationToken);
 
+        if (entity is null) return entity;
+
         _context.Entry(entity!).State = EntityState.Detached;
         return entity;
     }

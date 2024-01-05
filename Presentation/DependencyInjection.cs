@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Presentation.Middlewares;
 using Presentation.OptionsSetup;
 
 namespace Presentation;
@@ -33,6 +34,8 @@ public static class DependencyInjection
         service
             .AddAuthorization()
             .AddAuthorizationPolicies();
+
+        service.AddTransient<GlobalExceptionHandlingMiddleware>();
 
         return service;
     }

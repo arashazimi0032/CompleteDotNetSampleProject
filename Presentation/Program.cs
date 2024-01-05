@@ -7,6 +7,7 @@ using infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Presentation;
 using Microsoft.EntityFrameworkCore;
+using Presentation.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
