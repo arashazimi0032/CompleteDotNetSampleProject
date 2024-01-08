@@ -4,9 +4,11 @@ using Domain.Exceptions;
 using Domain.IRepositories.Commands;
 using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
+using Domain.Primitive.Result;
 using Domain.Products;
 using Domain.Products.ValueObjects;
 using Domain.Shared.ValueObjects;
+using Microsoft.CodeAnalysis;
 
 namespace Application.Test.Orders.Commands.Create;
 
@@ -24,7 +26,7 @@ public class CreateOrderCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_Should_ThrowProductNotFoundException_WhenProductIsNull()
+    public async Task Handler_Should_ReturnFailureResult_WhenProductIsNull()
     {
         // Arrange
         var createOrderHandler = new CreateOrderCommandHandler(_unitOfWorkMock.Object);
@@ -43,10 +45,13 @@ public class CreateOrderCommandHandlerTests
             .ReturnsAsync((Product?)null);
 
         // Act
-        var act = async () => await createOrderHandler.Handle(command, cancellationToken);
+        var result = await createOrderHandler.Handle(command, cancellationToken);
 
         // Assert
-        await act.Should().ThrowAsync<ProductNotFoundException>();
+        result.Should().BeOfType<Result<Guid>>();
+        result.Error.Code.Should().Be("404");
+        result.Error.Message.Should().Be($"The product with the ID = {productIds[0]} was not found!");
+        result.IsFailure.Should().BeTrue();
     }
 
     [Fact]
@@ -82,7 +87,7 @@ public class CreateOrderCommandHandlerTests
 
         // Assert
         _unitOfWorkMock.Verify(x => x.Commands.Order.AddAsync(
-            It.Is<Order>(o => o.Id.Value == createdOrderId),
+            It.Is<Order>(o => o.Id.Value == createdOrderId.Value),
             cancellationToken), 
             Times.Once);
 
@@ -90,7 +95,7 @@ public class CreateOrderCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_Should_ReturnGuidId_WhenProductIsNotNull()
+    public async Task Handler_Should_ReturnResultOfGuidId_WhenProductIsNotNull()
     {
         // Arrange
         var createOrderHandler = new CreateOrderCommandHandler(_unitOfWorkMock.Object);
@@ -121,7 +126,7 @@ public class CreateOrderCommandHandlerTests
         var createdOrderId = await createOrderHandler.Handle(command, cancellationToken);
 
         // Assert
-        createdOrderId.Should().NotBeEmpty();
-        createdOrderId.GetType().Should().Be(typeof(Guid));
+        createdOrderId.Value.Should().NotBeEmpty();
+        createdOrderId.GetType().Should().Be(typeof(Result<Guid>));
     }
 }

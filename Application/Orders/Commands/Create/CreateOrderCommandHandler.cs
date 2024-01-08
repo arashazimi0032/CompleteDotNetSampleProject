@@ -2,13 +2,15 @@
 using Domain.Exceptions;
 using Domain.IRepositories.UnitOfWorks;
 using Domain.Orders;
+using Domain.Primitive.Models;
+using Domain.Primitive.Result;
 using Domain.Products.ValueObjects;
 using Domain.Shared.ValueObjects;
 using MediatR;
     
 namespace Application.Orders.Commands.Create;
 
-internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
+internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -17,7 +19,7 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var order = Order.Create(CustomerId.Create(request.CustomerId));
 
@@ -27,7 +29,11 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
 
             if (product is null)
             {
-                throw new ProductNotFoundException(productId);
+                //throw new ProductNotFoundException(productId);
+                return Result.Failure<Guid>(
+                    new Error("404",
+                        $"The product with the ID = {productId} was not found!")
+                    );
             }
 
             var price = new Money(product.Price.Currency, product.Price.Amount);
@@ -37,6 +43,6 @@ internal sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCom
         await _unitOfWork.Commands.Order.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return order.Id.Value;
+        return Result.Success(order.Id.Value);
     }
 }
